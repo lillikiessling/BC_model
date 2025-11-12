@@ -20,7 +20,7 @@
 using std::size_t;
 static auto& std_cerr_stream = std::cerr;
 static constexpr auto number_of_datum_variables = 3;
-static constexpr auto number_of_floating_point_variables = 8;
+static constexpr auto number_of_floating_point_variables = 9;
 namespace {
 template <typename T>
 using _nrn_mechanism_std_vector = std::vector<T>;
@@ -71,20 +71,22 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #define dt nrn_threads->_dt
 #define gk_bar _ml->template fpfield<0>(_iml)
 #define gk_bar_columnindex 0
-#define ik _ml->template fpfield<1>(_iml)
-#define ik_columnindex 1
-#define m _ml->template fpfield<2>(_iml)
-#define m_columnindex 2
-#define h _ml->template fpfield<3>(_iml)
-#define h_columnindex 3
-#define ek _ml->template fpfield<4>(_iml)
-#define ek_columnindex 4
-#define Dm _ml->template fpfield<5>(_iml)
-#define Dm_columnindex 5
-#define Dh _ml->template fpfield<6>(_iml)
-#define Dh_columnindex 6
-#define _g _ml->template fpfield<7>(_iml)
-#define _g_columnindex 7
+#define vshift _ml->template fpfield<1>(_iml)
+#define vshift_columnindex 1
+#define ik _ml->template fpfield<2>(_iml)
+#define ik_columnindex 2
+#define m _ml->template fpfield<3>(_iml)
+#define m_columnindex 3
+#define h _ml->template fpfield<4>(_iml)
+#define h_columnindex 4
+#define ek _ml->template fpfield<5>(_iml)
+#define ek_columnindex 5
+#define Dm _ml->template fpfield<6>(_iml)
+#define Dm_columnindex 6
+#define Dh _ml->template fpfield<7>(_iml)
+#define Dh_columnindex 7
+#define _g _ml->template fpfield<8>(_iml)
+#define _g_columnindex 8
 #define _ion_ek *(_ml->dptr_field<0>(_iml))
 #define _p_ion_ek static_cast<neuron::container::data_handle<double>>(_ppvar[0])
 #define _ion_ik *(_ml->dptr_field<1>(_iml))
@@ -145,6 +147,7 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  {"tau_m_Bip_Kv", "ms"},
  {"tau_h_Bip_Kv", "ms"},
  {"gk_bar_Bip_Kv", "mS/cm2"},
+ {"vshift_Bip_Kv", "mV"},
  {"ik_Bip_Kv", "mA/cm2"},
  {0, 0}
 };
@@ -197,6 +200,7 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  "7.7.0",
 "Bip_Kv",
  "gk_bar_Bip_Kv",
+ "vshift_Bip_Kv",
  0,
  "ik_Bip_Kv",
  0,
@@ -209,6 +213,7 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  /* Used by NrnProperty */
  static _nrn_mechanism_std_vector<double> _parm_default{
      14.3357, /* gk_bar */
+     -53.08, /* vshift */
  }; 
  
  
@@ -221,10 +226,11 @@ static void nrn_alloc(Prop* _prop) {
      _nrn_mechanism_cache_instance _ml_real{_prop};
     auto* const _ml = &_ml_real;
     size_t const _iml{};
-    assert(_nrn_mechanism_get_num_vars(_prop) == 8);
+    assert(_nrn_mechanism_get_num_vars(_prop) == 9);
  	/*initialize range parameters*/
  	gk_bar = _parm_default[0]; /* 14.3357 */
- 	 assert(_nrn_mechanism_get_num_vars(_prop) == 8);
+ 	vshift = _parm_default[1]; /* -53.08 */
+ 	 assert(_nrn_mechanism_get_num_vars(_prop) == 9);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_k_sym);
@@ -261,18 +267,19 @@ extern void _cvode_abstol( Symbol**, double*, int);
 #endif
    _nrn_mechanism_register_data_fields(_mechtype,
                                        _nrn_mechanism_field<double>{"gk_bar"} /* 0 */,
-                                       _nrn_mechanism_field<double>{"ik"} /* 1 */,
-                                       _nrn_mechanism_field<double>{"m"} /* 2 */,
-                                       _nrn_mechanism_field<double>{"h"} /* 3 */,
-                                       _nrn_mechanism_field<double>{"ek"} /* 4 */,
-                                       _nrn_mechanism_field<double>{"Dm"} /* 5 */,
-                                       _nrn_mechanism_field<double>{"Dh"} /* 6 */,
-                                       _nrn_mechanism_field<double>{"_g"} /* 7 */,
+                                       _nrn_mechanism_field<double>{"vshift"} /* 1 */,
+                                       _nrn_mechanism_field<double>{"ik"} /* 2 */,
+                                       _nrn_mechanism_field<double>{"m"} /* 3 */,
+                                       _nrn_mechanism_field<double>{"h"} /* 4 */,
+                                       _nrn_mechanism_field<double>{"ek"} /* 5 */,
+                                       _nrn_mechanism_field<double>{"Dm"} /* 6 */,
+                                       _nrn_mechanism_field<double>{"Dh"} /* 7 */,
+                                       _nrn_mechanism_field<double>{"_g"} /* 8 */,
                                        _nrn_mechanism_field<double*>{"_ion_ek", "k_ion"} /* 0 */,
                                        _nrn_mechanism_field<double*>{"_ion_ik", "k_ion"} /* 1 */,
                                        _nrn_mechanism_field<double*>{"_ion_dikdv", "k_ion"} /* 2 */,
                                        _nrn_mechanism_field<int>{"_cvode_ieq", "cvodeieq"} /* 3 */);
-  hoc_register_prop_size(_mechtype, 8, 4);
+  hoc_register_prop_size(_mechtype, 9, 4);
   hoc_register_dparam_semantics(_mechtype, 0, "k_ion");
   hoc_register_dparam_semantics(_mechtype, 1, "k_ion");
   hoc_register_dparam_semantics(_mechtype, 2, "k_ion");
@@ -281,7 +288,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 Bip_Kv /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/Bip_Kv.mod\n");
+ 	ivoc_help("help ?1 Bip_Kv /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/Bip_Kv.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -327,15 +334,23 @@ static int _ode_spec1(_internalthreadargsproto_);
 }
  
 static int  rates (  double _lv ) {
-   m_inf = 1.0 / ( 1.0 + exp ( ( _lv - 50.0 ) / ( - 12.3 ) ) ) ;
-   tau_m = 2.0304 + ( 27.913114 / ( 1.0 + exp ( ( _lv - 27.4141 ) / 55.704638 ) ) ) ;
-   h_inf = 0.05 + ( 0.95 / ( 1.0 + exp ( ( _lv - 23.2939 ) / 19.385636 ) ) ) ;
-   tau_h = 199.78 + 2776.11 * exp ( ( - _lv - 5.0 ) / 55.0 ) ;
+   double _lvred ;
+ _lvred = _lv - vshift ;
+   m_inf = 1.0 / ( 1.0 + exp ( ( _lvred - 50.0 ) / ( - 12.3 ) ) ) ;
+   tau_m = 2.0304 + ( 27.913114 / ( 1.0 + exp ( ( _lvred - 27.4141 ) / 55.704638 ) ) ) ;
+   h_inf = 0.05 + ( 0.95 / ( 1.0 + exp ( ( _lvred - 23.2939 ) / 19.385636 ) ) ) ;
+   tau_h = 199.78 + 2776.11 * exp ( ( - _lvred - 5.0 ) / 55.0 ) ;
     return 0; }
  
 static void _hoc_rates(void) {
   double _r;
-    _r = 1.;
+  
+  if(!_prop_id) {
+    hoc_execerror("No data for rates_Bip_Kv. Requires prior call to setdata_Bip_Kv and that the specified mechanism instance still be in existence.", NULL);
+  } else {
+    _setdata(_extcall_prop);
+  }
+   _r = 1.;
  rates (  *getarg(1) );
  hoc_retpushx(_r);
 }
@@ -495,7 +510,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   ek = _ion_ek;
  { error =  states();
  if(error){
-  std_cerr_stream << "at line 38 in file Bip_Kv.mod:\nBREAKPOINT {\n";
+  std_cerr_stream << "at line 40 in file Bip_Kv.mod:\nBREAKPOINT {\n";
   std_cerr_stream << _ml << ' ' << _iml << '\n';
   abort_run(error);
 }
@@ -515,13 +530,14 @@ _first = 0;
 
 #if NMODL_TEXT
 static void register_nmodl_text_and_filename(int mech_type) {
-    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/Bip_Kv.mod";
+    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/Bip_Kv.mod";
     const char* nmodl_file_text = 
   "NEURON {\n"
   "    SUFFIX Bip_Kv\n"
   "    USEION k READ ek WRITE ik\n"
   "    RANGE gk_bar, ik\n"
   "    GLOBAL m_inf, h_inf, tau_m, tau_h\n"
+  "    RANGE vshift\n"
   "}\n"
   "\n"
   "UNITS {\n"
@@ -537,6 +553,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "PARAMETER {\n"
   "    gk_bar = 14.3357 (mS/cm2) : Maximum potassium conductance\n"
+  "    vshift = -53.08  (mV) \n"
   "}\n"
   "\n"
   "ASSIGNED {\n"
@@ -572,13 +589,16 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "}\n"
   "\n"
   "PROCEDURE rates(v (mV)) {\n"
+  "    LOCAL vred\n"
+  "    vred = v - vshift\n"
+  "\n"
   "    : m (activation) steady-state and tau \n"
-  "    m_inf = 1 / (1 + exp((v - 50) / (-12.3)))\n"
-  "    tau_m = 2.0304 + (27.913114 / (1 + exp((v - 27.4141) / 55.704638)))\n"
-  "    \n"
+  "    m_inf = 1 / (1 + exp((vred - 50) / (-12.3)))\n"
+  "    tau_m = 2.0304 + (27.913114 / (1 + exp((vred - 27.4141) / 55.704638)))\n"
+  "\n"
   "    : h (inactivation) steady-state and tau \n"
-  "    h_inf = 0.05 + (0.95 / (1 + exp((v - 23.2939) / 19.385636)))\n"
-  "    tau_h = 199.78 + 2776.11 * exp((-v - 5) / 55)\n"
+  "    h_inf = 0.05 + (0.95 / (1 + exp((vred - 23.2939) / 19.385636)))\n"
+  "    tau_h = 199.78 + 2776.11 * exp((-vred - 5) / 55)\n"
   "}\n"
   ;
     hoc_reg_nmodl_filename(mech_type, nmodl_filename);

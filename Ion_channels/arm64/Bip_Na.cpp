@@ -17,7 +17,7 @@
 // clang-format on
 #include "neuron/cache/mechanism_range.hpp"
 static constexpr auto number_of_datum_variables = 3;
-static constexpr auto number_of_floating_point_variables = 13;
+static constexpr auto number_of_floating_point_variables = 14;
 namespace {
 template <typename T>
 using _nrn_mechanism_std_vector = std::vector<T>;
@@ -68,30 +68,32 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #define dt _nt->_dt
 #define gna_bar _ml->template fpfield<0>(_iml)
 #define gna_bar_columnindex 0
-#define ina _ml->template fpfield<1>(_iml)
-#define ina_columnindex 1
-#define m_inf _ml->template fpfield<2>(_iml)
-#define m_inf_columnindex 2
-#define h_inf _ml->template fpfield<3>(_iml)
-#define h_inf_columnindex 3
-#define tau_m _ml->template fpfield<4>(_iml)
-#define tau_m_columnindex 4
-#define tau_h _ml->template fpfield<5>(_iml)
-#define tau_h_columnindex 5
-#define m _ml->template fpfield<6>(_iml)
-#define m_columnindex 6
-#define h _ml->template fpfield<7>(_iml)
-#define h_columnindex 7
-#define ena _ml->template fpfield<8>(_iml)
-#define ena_columnindex 8
-#define Dm _ml->template fpfield<9>(_iml)
-#define Dm_columnindex 9
-#define Dh _ml->template fpfield<10>(_iml)
-#define Dh_columnindex 10
-#define v _ml->template fpfield<11>(_iml)
-#define v_columnindex 11
-#define _g _ml->template fpfield<12>(_iml)
-#define _g_columnindex 12
+#define vshift _ml->template fpfield<1>(_iml)
+#define vshift_columnindex 1
+#define ina _ml->template fpfield<2>(_iml)
+#define ina_columnindex 2
+#define m_inf _ml->template fpfield<3>(_iml)
+#define m_inf_columnindex 3
+#define h_inf _ml->template fpfield<4>(_iml)
+#define h_inf_columnindex 4
+#define tau_m _ml->template fpfield<5>(_iml)
+#define tau_m_columnindex 5
+#define tau_h _ml->template fpfield<6>(_iml)
+#define tau_h_columnindex 6
+#define m _ml->template fpfield<7>(_iml)
+#define m_columnindex 7
+#define h _ml->template fpfield<8>(_iml)
+#define h_columnindex 8
+#define ena _ml->template fpfield<9>(_iml)
+#define ena_columnindex 9
+#define Dm _ml->template fpfield<10>(_iml)
+#define Dm_columnindex 10
+#define Dh _ml->template fpfield<11>(_iml)
+#define Dh_columnindex 11
+#define v _ml->template fpfield<12>(_iml)
+#define v_columnindex 12
+#define _g _ml->template fpfield<13>(_iml)
+#define _g_columnindex 13
 #define _ion_ena *(_ml->dptr_field<0>(_iml))
 #define _p_ion_ena static_cast<neuron::container::data_handle<double>>(_ppvar[0])
 #define _ion_ina *(_ml->dptr_field<1>(_iml))
@@ -104,6 +106,7 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
  /* _prop_id kind of shadows _extcall_prop to allow validity checking. */
  static _nrn_non_owning_id_without_container _prop_id{};
  /* external NEURON variables */
+ extern double celsius;
  /* declaration of user functions */
  static void _hoc_rates(void);
  static int _mechtype;
@@ -140,6 +143,7 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
 };
  static HocParmUnits _hoc_parm_units[] = {
  {"gna_bar_Bip_Na", "mS/cm2"},
+ {"vshift_Bip_Na", "mV"},
  {"ina_Bip_Na", "mA/cm2"},
  {"tau_m_Bip_Na", "ms"},
  {"tau_h_Bip_Na", "ms"},
@@ -185,6 +189,7 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  "7.7.0",
 "Bip_Na",
  "gna_bar_Bip_Na",
+ "vshift_Bip_Na",
  0,
  "ina_Bip_Na",
  "m_inf_Bip_Na",
@@ -201,6 +206,7 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  /* Used by NrnProperty */
  static _nrn_mechanism_std_vector<double> _parm_default{
      2.22858, /* gna_bar */
+     -53.08, /* vshift */
  }; 
  
  
@@ -213,10 +219,11 @@ static void nrn_alloc(Prop* _prop) {
      _nrn_mechanism_cache_instance _ml_real{_prop};
     auto* const _ml = &_ml_real;
     size_t const _iml{};
-    assert(_nrn_mechanism_get_num_vars(_prop) == 13);
+    assert(_nrn_mechanism_get_num_vars(_prop) == 14);
  	/*initialize range parameters*/
  	gna_bar = _parm_default[0]; /* 2.22858 */
- 	 assert(_nrn_mechanism_get_num_vars(_prop) == 13);
+ 	vshift = _parm_default[1]; /* -53.08 */
+ 	 assert(_nrn_mechanism_get_num_vars(_prop) == 14);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_na_sym);
@@ -253,23 +260,24 @@ extern void _cvode_abstol( Symbol**, double*, int);
 #endif
    _nrn_mechanism_register_data_fields(_mechtype,
                                        _nrn_mechanism_field<double>{"gna_bar"} /* 0 */,
-                                       _nrn_mechanism_field<double>{"ina"} /* 1 */,
-                                       _nrn_mechanism_field<double>{"m_inf"} /* 2 */,
-                                       _nrn_mechanism_field<double>{"h_inf"} /* 3 */,
-                                       _nrn_mechanism_field<double>{"tau_m"} /* 4 */,
-                                       _nrn_mechanism_field<double>{"tau_h"} /* 5 */,
-                                       _nrn_mechanism_field<double>{"m"} /* 6 */,
-                                       _nrn_mechanism_field<double>{"h"} /* 7 */,
-                                       _nrn_mechanism_field<double>{"ena"} /* 8 */,
-                                       _nrn_mechanism_field<double>{"Dm"} /* 9 */,
-                                       _nrn_mechanism_field<double>{"Dh"} /* 10 */,
-                                       _nrn_mechanism_field<double>{"v"} /* 11 */,
-                                       _nrn_mechanism_field<double>{"_g"} /* 12 */,
+                                       _nrn_mechanism_field<double>{"vshift"} /* 1 */,
+                                       _nrn_mechanism_field<double>{"ina"} /* 2 */,
+                                       _nrn_mechanism_field<double>{"m_inf"} /* 3 */,
+                                       _nrn_mechanism_field<double>{"h_inf"} /* 4 */,
+                                       _nrn_mechanism_field<double>{"tau_m"} /* 5 */,
+                                       _nrn_mechanism_field<double>{"tau_h"} /* 6 */,
+                                       _nrn_mechanism_field<double>{"m"} /* 7 */,
+                                       _nrn_mechanism_field<double>{"h"} /* 8 */,
+                                       _nrn_mechanism_field<double>{"ena"} /* 9 */,
+                                       _nrn_mechanism_field<double>{"Dm"} /* 10 */,
+                                       _nrn_mechanism_field<double>{"Dh"} /* 11 */,
+                                       _nrn_mechanism_field<double>{"v"} /* 12 */,
+                                       _nrn_mechanism_field<double>{"_g"} /* 13 */,
                                        _nrn_mechanism_field<double*>{"_ion_ena", "na_ion"} /* 0 */,
                                        _nrn_mechanism_field<double*>{"_ion_ina", "na_ion"} /* 1 */,
                                        _nrn_mechanism_field<double*>{"_ion_dinadv", "na_ion"} /* 2 */,
                                        _nrn_mechanism_field<int>{"_cvode_ieq", "cvodeieq"} /* 3 */);
-  hoc_register_prop_size(_mechtype, 13, 4);
+  hoc_register_prop_size(_mechtype, 14, 4);
   hoc_register_dparam_semantics(_mechtype, 0, "na_ion");
   hoc_register_dparam_semantics(_mechtype, 1, "na_ion");
   hoc_register_dparam_semantics(_mechtype, 2, "na_ion");
@@ -278,7 +286,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 Bip_Na /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/Bip_Na.mod\n");
+ 	ivoc_help("help ?1 Bip_Na /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/Bip_Na.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -322,14 +330,15 @@ static int _ode_spec1(_internalthreadargsproto_);
 }
  
 static int  rates ( _internalthreadargsprotocomma_ double _lv ) {
-   double _lalpha_m , _lbeta_m , _lalpha_h , _lbeta_h ;
- _lalpha_m = 0.271 * exp ( _lv / 30.075 ) ;
-   _lbeta_m = 10.0 / ( exp ( ( _lv + 25.2619 ) / 10.1191 ) + 1.0 ) ;
-   tau_m = 1.0 / ( _lalpha_m + _lbeta_m ) ;
+   double _lalpha_m , _lbeta_m , _lalpha_h , _lbeta_h , _lvred ;
+ _lvred = _lv - vshift ;
+   _lalpha_m = 0.271 * exp ( _lvred / 30.075 ) ;
+   _lbeta_m = 10.0 / ( exp ( ( _lvred + 25.2619 ) / 10.1191 ) + 1.0 ) ;
+   tau_m = ( 1.0 / ( _lalpha_m + _lbeta_m ) ) ;
    m_inf = _lalpha_m / ( _lalpha_m + _lbeta_m ) ;
-   _lalpha_h = 0.3898 * exp ( ( 1.6482 - _lv ) / 12.2978 ) ;
-   _lbeta_h = 0.6624 / ( exp ( ( - 44.9996 - _lv ) / 40.0 ) + 1.0 ) ;
-   tau_h = 1.0 / ( _lalpha_h + _lbeta_h ) ;
+   _lalpha_h = 0.3898 * exp ( ( 1.6482 - _lvred ) / 12.2978 ) ;
+   _lbeta_h = 0.6624 / ( exp ( ( - 44.9996 - _lvred ) / 40.0 ) + 1.0 ) ;
+   tau_h = ( 1.0 / ( _lalpha_h + _lbeta_h ) ) ;
    h_inf = _lalpha_h / ( _lalpha_h + _lbeta_h ) ;
     return 0; }
  
@@ -553,13 +562,14 @@ _first = 0;
 
 #if NMODL_TEXT
 static void register_nmodl_text_and_filename(int mech_type) {
-    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/Bip_Na.mod";
+    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/Bip_Na.mod";
     const char* nmodl_file_text = 
   "NEURON {\n"
   "    SUFFIX Bip_Na\n"
   "    USEION na READ ena WRITE ina\n"
   "    RANGE gna_bar, ina\n"
   "    RANGE m_inf, h_inf, tau_m, tau_h\n"
+  "    RANGE vshift\n"
   "}\n"
   "\n"
   "UNITS {\n"
@@ -575,6 +585,8 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "PARAMETER {\n"
   "    gna_bar = 2.22858 (mS/cm2): Maximum sodium conductance\n"
+  "    celsius (degC)\n"
+  "    vshift = -53.08  (mV) \n"
   "}\n"
   "\n"
   "ASSIGNED {\n"
@@ -594,6 +606,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "BREAKPOINT {\n"
   "    SOLVE states METHOD cnexp\n"
+  "\n"
   "    ina = gna_bar * m*m*m * h * (v - ena)\n"
   "}\n"
   "\n"
@@ -610,18 +623,20 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "}\n"
   "\n"
   "PROCEDURE rates(v (mV)) {\n"
-  "    LOCAL alpha_m, beta_m, alpha_h, beta_h\n"
+  "    LOCAL alpha_m, beta_m, alpha_h, beta_h, vred\n"
+  "\n"
+  "    vred = v - vshift\n"
   "\n"
   "    :Sodium activation\n"
-  "    alpha_m = 0.271 * exp(v / 30.075) \n"
-  "    beta_m  = 10 / (exp((v + 25.2619) / 10.1191) + 1) \n"
-  "    tau_m = 1 / (alpha_m + beta_m)\n"
+  "    alpha_m = 0.271 * exp(vred / 30.075) \n"
+  "    beta_m  = 10 / (exp((vred + 25.2619) / 10.1191) + 1) \n"
+  "    tau_m = (1 / (alpha_m + beta_m)) \n"
   "    m_inf = alpha_m / (alpha_m + beta_m)\n"
   "\n"
   "    :Sodium inactivation\n"
-  "    alpha_h = 0.3898 * exp((1.6482 - v)/12.2978) \n"
-  "    beta_h  = 0.6624 / (exp((-44.9996 - v)/40) + 1) \n"
-  "    tau_h = 1 / (alpha_h + beta_h) \n"
+  "    alpha_h = 0.3898 * exp((1.6482 - vred)/12.2978) \n"
+  "    beta_h  = 0.6624 / (exp((-44.9996 - vred)/40) + 1) \n"
+  "    tau_h = (1 / (alpha_h + beta_h)) \n"
   "    h_inf = alpha_h / (alpha_h + beta_h)\n"
   "}\n"
   ;

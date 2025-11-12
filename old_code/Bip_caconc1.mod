@@ -2,9 +2,10 @@ TITLE Bipolar Cell Calcium Concentration Mechanism (ON-type)
 
 
 NEURON {
-    SUFFIX Bip_caconc
+    SUFFIX Bip_caconc1
     USEION ca READ ica WRITE cai VALENCE 2
     RANGE cai, taur, area_um2, vol_um3
+    RANGE ca_init
 }
 
 UNITS {
@@ -23,6 +24,7 @@ PARAMETER {
     area_um2 = 0 (um2)   : section surface area auto-detect
     vol_um3  = 0 (um3)   : submembrane volume auto-compute from area
     shell_thickness = 0.1 (um)
+    ca_init = 0.1501 (uM)
 }
 
 ASSIGNED {
@@ -35,7 +37,7 @@ ASSIGNED {
 STATE { cai (uM) }
 
 INITIAL {
-    cai = 0.1501 (uM)
+    cai = ca_init
 
     : compute local surface and volume for this segment
     if (vol_um3 <= 0) {

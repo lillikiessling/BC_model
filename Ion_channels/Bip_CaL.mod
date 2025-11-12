@@ -1,75 +1,81 @@
-TITLE Bipolar Cell L-type Calcium Channel (ON-type with weighted reversal potential)
+TITLE HH style Ca L-type channel
+
+INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
-    SUFFIX Bip_CaL
-    USEION ca READ cai, cao WRITE ica VALENCE 2
-    USEION k READ ek
-    RANGE gcalbar, m, h, ica, ecal, vshift, m_inf, h_inf
+	THREADSAFE
+    	SUFFIX Bip_CaL
+    	USEION ca READ eca, cao WRITE ica
+    	RANGE gcabar
+    	RANGE m_inf, h_inf
+    	RANGE m_tau, h_tau
+		RANGE vshift
 }
 
 UNITS {
-    (mV) = (millivolt)
-    (mA) = (milliamp)
-    (um) = (micron)
-    (molar) = (1/liter)
-    (uM) = (micromolar)
-    FARADAY = (faraday) (coulomb)
-    R = (k-mole) (joule/degC)
+	(molar) = 	(1/liter)
+	(mA) = 		(milliamp)
+	(mV) = 		(millivolt)
+	(mS) = 		(millisiemens)
+
 }
 
 PARAMETER {
-    gcalbar = 0.4352 (mho/cm2)
-    z = 2
-    cao = 1800 (uM)
-    vshift = 90 (mV)
-}
-
-ASSIGNED {
-    v (mV)
-    celsius (degC)
-    cai (uM)
-    ek (mV)
-    ecal (mV)
-    ica (mA/cm2)
-    alpha_m (1/ms)
-    beta_m (1/ms)
-    m_inf
-    h_inf
-    tau_m (ms)
-    tau_h (ms)
-    T (K)
+    	gcabar = 0.4352	(mS/cm2)
+    	eca          	(mV)
+    	cao = 1800 	    (uM)
+    	cai = 0.1 		(uM)
+    	dt           	(ms)
+    	v            	(mV)
+		vshift = -70.0	(mV)
 }
 
 STATE { m h }
 
 INITIAL {
-    T = celsius + 273.15
-    rates(v)
-    m = m_inf
-    h = h_inf
+	mrates(v)
+	m = m_inf
+	hrates(v)
+	h = h_inf
 }
 
+ASSIGNED {
+    	ica    		(mA/cm2)
+    	m_inf h_inf
+    	m_tau h_tau
+}
+
+INITIAL { 
+	mrates(v)
+	hrates(v)
+
+	m = m_inf
+	h = h_inf
+}
 
 BREAKPOINT {
-    SOLVE states METHOD cnexp
-    ecal = 0.32 *(1000) * (R*T/(z*FARADAY)) * log(cao/cai) + 0.68 * ek
-    ica  = gcalbar * m^2 * h * (v - ecal)
+	SOLVE states METHOD cnexp
+    	ica = (1e-3) * gcabar * m*m*h * (v-(0.32*eca+0.68*-58))
 }
 
 DERIVATIVE states {
-    rates(v)
-    m' = (m_inf - m)/tau_m
-    h' = (h_inf - h)/tau_h
+    mrates(v)
+	hrates(v)
+
+	m' = (m_inf-m)/m_tau
+    h' = (h_inf-h)/h_tau
 }
 
+PROCEDURE mrates(v) { LOCAL a,b, vred
+	vred = v - vshift
+	a = 0.427 * (vred - 63) / (1 - exp(-(vred - 63)/10.5))
+	b = 0.0406 * exp((70 - vred)/12)
+	m_tau = 1 / (a+b)
+	m_inf = a * m_tau
+}
 
-PROCEDURE rates(v(mV)) {
-    LOCAL v2
-    v2 = v + vshift
-    alpha_m = 0.427 * (v2 - 63) / (1 - exp(-(v2 - 63)/10.5))
-    beta_m = 0.0406 * exp((70 - v2)/12)
-    m_inf = alpha_m / (alpha_m + beta_m)
-    tau_m = 1 / (alpha_m + beta_m)
-    h_inf = 1 / (1 + exp((v2 / 66.4)))
-    tau_h = 292
+PROCEDURE hrates(v) { LOCAL vred
+	vred = v - vshift
+	h_tau = 292
+	h_inf = 1 / (1 + exp((vred / 66.4)))
 }

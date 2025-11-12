@@ -3,6 +3,7 @@ NEURON {
     USEION na READ ena WRITE ina
     RANGE gna_bar, ina
     RANGE m_inf, h_inf, tau_m, tau_h
+    RANGE vshift
 }
 
 UNITS {
@@ -18,6 +19,8 @@ UNITS {
 
 PARAMETER {
     gna_bar = 2.22858 (mS/cm2): Maximum sodium conductance
+    celsius (degC)
+    vshift = -53.08  (mV) 
 }
 
 ASSIGNED {
@@ -37,6 +40,7 @@ STATE {
 
 BREAKPOINT {
     SOLVE states METHOD cnexp
+
     ina = gna_bar * m*m*m * h * (v - ena)
 }
 
@@ -53,17 +57,19 @@ DERIVATIVE states {
 }
 
 PROCEDURE rates(v (mV)) {
-    LOCAL alpha_m, beta_m, alpha_h, beta_h
+    LOCAL alpha_m, beta_m, alpha_h, beta_h, vred
+
+    vred = v - vshift
 
     :Sodium activation
-    alpha_m = 0.271 * exp(v / 30.075) 
-    beta_m  = 10 / (exp((v + 25.2619) / 10.1191) + 1) 
-    tau_m = 1 / (alpha_m + beta_m)
+    alpha_m = 0.271 * exp(vred / 30.075) 
+    beta_m  = 10 / (exp((vred + 25.2619) / 10.1191) + 1) 
+    tau_m = (1 / (alpha_m + beta_m)) 
     m_inf = alpha_m / (alpha_m + beta_m)
 
     :Sodium inactivation
-    alpha_h = 0.3898 * exp((1.6482 - v)/12.2978) 
-    beta_h  = 0.6624 / (exp((-44.9996 - v)/40) + 1) 
-    tau_h = 1 / (alpha_h + beta_h) 
+    alpha_h = 0.3898 * exp((1.6482 - vred)/12.2978) 
+    beta_h  = 0.6624 / (exp((-44.9996 - vred)/40) + 1) 
+    tau_h = (1 / (alpha_h + beta_h)) 
     h_inf = alpha_h / (alpha_h + beta_h)
 }

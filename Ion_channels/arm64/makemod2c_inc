@@ -1,80 +1,96 @@
+BiP_HCN4.cpp: ../BiP_HCN4.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "BiP_HCN4.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
+
+./BiP_HCN4.o: BiP_HCN4.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
+
+Bip_Ca.cpp: ../Bip_Ca.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_Ca.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
+
+./Bip_Ca.o: Bip_Ca.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
+
 Bip_CaL.cpp: ../Bip_CaL.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_CaL.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_CaL.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./Bip_CaL.o: Bip_CaL.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
 Bip_CaT.cpp: ../Bip_CaT.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_CaT.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_CaT.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./Bip_CaT.o: Bip_CaT.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
 Bip_HCN1.cpp: ../Bip_HCN1.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_HCN1.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_HCN1.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./Bip_HCN1.o: Bip_HCN1.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
 Bip_HCN2.cpp: ../Bip_HCN2.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_HCN2.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_HCN2.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./Bip_HCN2.o: Bip_HCN2.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
+
+Bip_KCa.cpp: ../Bip_KCa.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_KCa.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
+
+./Bip_KCa.o: Bip_KCa.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
 Bip_Kir.cpp: ../Bip_Kir.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_Kir.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_Kir.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./Bip_Kir.o: Bip_Kir.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
 Bip_Kv.cpp: ../Bip_Kv.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_Kv.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_Kv.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./Bip_Kv.o: Bip_Kv.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
 Bip_Na.cpp: ../Bip_Na.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_Na.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_Na.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./Bip_Na.o: Bip_Na.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
-Bip_caconc.cpp: ../Bip_caconc.mod $(NOCMODL)
+capump.cpp: ../capump.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_caconc.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "capump.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
-./Bip_caconc.o: Bip_caconc.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+./capump.o: capump.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
-Bip_caconc_2.cpp: ../Bip_caconc_2.mod $(NOCMODL)
+xtra.cpp: ../xtra.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Bip_caconc_2.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "xtra.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
-./Bip_caconc_2.o: Bip_caconc_2.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
-
-Horizontal_INa.cpp: ../Horizontal_INa.mod $(NOCMODL)
-	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Horizontal_INa.mod"  -o "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64" )
-
-./Horizontal_INa.o: Horizontal_INa.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/arm64/$<" -o $@
+./xtra.o: xtra.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 

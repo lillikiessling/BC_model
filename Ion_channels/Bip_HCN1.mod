@@ -3,6 +3,7 @@ NEURON {
     USEION h READ eh WRITE ih
     RANGE ghcn1_bar, ih
     GLOBAL m_inf, tau_m
+    RANGE vshift
 }
 
 UNITS {
@@ -18,6 +19,7 @@ UNITS {
 
 PARAMETER {
     ghcn1_bar = 0.1128 (mS/cm2) : Maximum HCN1 conductance
+    vshift = -53.08  (mV)
 }
 
 
@@ -49,7 +51,9 @@ DERIVATIVE states {
 }
 
 PROCEDURE rates(v (mV)) {
+    LOCAL vred
+    vred = v - vshift
     : m (activation) rates
-    m_inf = 1 / (1+exp((v-39)/6.6)) - 0.0027
+    m_inf = 1 / (1+exp((vred+39)/6.6)) - 0.0027
     tau_m = 60 : constant
 }

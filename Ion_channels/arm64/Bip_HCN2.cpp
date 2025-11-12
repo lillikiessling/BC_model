@@ -20,7 +20,7 @@
 using std::size_t;
 static auto& std_cerr_stream = std::cerr;
 static constexpr auto number_of_datum_variables = 3;
-static constexpr auto number_of_floating_point_variables = 6;
+static constexpr auto number_of_floating_point_variables = 7;
 namespace {
 template <typename T>
 using _nrn_mechanism_std_vector = std::vector<T>;
@@ -71,16 +71,18 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #define dt nrn_threads->_dt
 #define ghcn2_bar _ml->template fpfield<0>(_iml)
 #define ghcn2_bar_columnindex 0
-#define ih _ml->template fpfield<1>(_iml)
-#define ih_columnindex 1
-#define m _ml->template fpfield<2>(_iml)
-#define m_columnindex 2
-#define eh _ml->template fpfield<3>(_iml)
-#define eh_columnindex 3
-#define Dm _ml->template fpfield<4>(_iml)
-#define Dm_columnindex 4
-#define _g _ml->template fpfield<5>(_iml)
-#define _g_columnindex 5
+#define vshift _ml->template fpfield<1>(_iml)
+#define vshift_columnindex 1
+#define ih _ml->template fpfield<2>(_iml)
+#define ih_columnindex 2
+#define m _ml->template fpfield<3>(_iml)
+#define m_columnindex 3
+#define eh _ml->template fpfield<4>(_iml)
+#define eh_columnindex 4
+#define Dm _ml->template fpfield<5>(_iml)
+#define Dm_columnindex 5
+#define _g _ml->template fpfield<6>(_iml)
+#define _g_columnindex 6
 #define _ion_eh *(_ml->dptr_field<0>(_iml))
 #define _p_ion_eh static_cast<neuron::container::data_handle<double>>(_ppvar[0])
 #define _ion_ih *(_ml->dptr_field<1>(_iml))
@@ -136,6 +138,7 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  static HocParmUnits _hoc_parm_units[] = {
  {"tau_m_Bip_HCN2", "ms"},
  {"ghcn2_bar_Bip_HCN2", "mS/cm2"},
+ {"vshift_Bip_HCN2", "mV"},
  {"ih_Bip_HCN2", "mA/cm2"},
  {0, 0}
 };
@@ -185,6 +188,7 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  "7.7.0",
 "Bip_HCN2",
  "ghcn2_bar_Bip_HCN2",
+ "vshift_Bip_HCN2",
  0,
  "ih_Bip_HCN2",
  0,
@@ -196,6 +200,7 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  /* Used by NrnProperty */
  static _nrn_mechanism_std_vector<double> _parm_default{
      0.1, /* ghcn2_bar */
+     -53.08, /* vshift */
  }; 
  
  
@@ -208,10 +213,11 @@ static void nrn_alloc(Prop* _prop) {
      _nrn_mechanism_cache_instance _ml_real{_prop};
     auto* const _ml = &_ml_real;
     size_t const _iml{};
-    assert(_nrn_mechanism_get_num_vars(_prop) == 6);
+    assert(_nrn_mechanism_get_num_vars(_prop) == 7);
  	/*initialize range parameters*/
  	ghcn2_bar = _parm_default[0]; /* 0.1 */
- 	 assert(_nrn_mechanism_get_num_vars(_prop) == 6);
+ 	vshift = _parm_default[1]; /* -53.08 */
+ 	 assert(_nrn_mechanism_get_num_vars(_prop) == 7);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_h_sym);
@@ -248,16 +254,17 @@ extern void _cvode_abstol( Symbol**, double*, int);
 #endif
    _nrn_mechanism_register_data_fields(_mechtype,
                                        _nrn_mechanism_field<double>{"ghcn2_bar"} /* 0 */,
-                                       _nrn_mechanism_field<double>{"ih"} /* 1 */,
-                                       _nrn_mechanism_field<double>{"m"} /* 2 */,
-                                       _nrn_mechanism_field<double>{"eh"} /* 3 */,
-                                       _nrn_mechanism_field<double>{"Dm"} /* 4 */,
-                                       _nrn_mechanism_field<double>{"_g"} /* 5 */,
+                                       _nrn_mechanism_field<double>{"vshift"} /* 1 */,
+                                       _nrn_mechanism_field<double>{"ih"} /* 2 */,
+                                       _nrn_mechanism_field<double>{"m"} /* 3 */,
+                                       _nrn_mechanism_field<double>{"eh"} /* 4 */,
+                                       _nrn_mechanism_field<double>{"Dm"} /* 5 */,
+                                       _nrn_mechanism_field<double>{"_g"} /* 6 */,
                                        _nrn_mechanism_field<double*>{"_ion_eh", "h_ion"} /* 0 */,
                                        _nrn_mechanism_field<double*>{"_ion_ih", "h_ion"} /* 1 */,
                                        _nrn_mechanism_field<double*>{"_ion_dihdv", "h_ion"} /* 2 */,
                                        _nrn_mechanism_field<int>{"_cvode_ieq", "cvodeieq"} /* 3 */);
-  hoc_register_prop_size(_mechtype, 6, 4);
+  hoc_register_prop_size(_mechtype, 7, 4);
   hoc_register_dparam_semantics(_mechtype, 0, "h_ion");
   hoc_register_dparam_semantics(_mechtype, 1, "h_ion");
   hoc_register_dparam_semantics(_mechtype, 2, "h_ion");
@@ -266,7 +273,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 Bip_HCN2 /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/Bip_HCN2.mod\n");
+ 	ivoc_help("help ?1 Bip_HCN2 /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/Bip_HCN2.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -307,13 +314,21 @@ static int _ode_spec1(_internalthreadargsproto_);
 }
  
 static int  rates (  double _lv ) {
-   m_inf = 1.0 / ( 1.0 + exp ( ( _lv + 42.0 ) / 6.2 ) ) ;
+   double _lvred ;
+ _lvred = _lv - vshift ;
+   m_inf = 1.0 / ( 1.0 + exp ( ( _lvred + 42.0 ) / 6.2 ) ) ;
    tau_m = 120.0 ;
     return 0; }
  
 static void _hoc_rates(void) {
   double _r;
-    _r = 1.;
+  
+  if(!_prop_id) {
+    hoc_execerror("No data for rates_Bip_HCN2. Requires prior call to setdata_Bip_HCN2 and that the specified mechanism instance still be in existence.", NULL);
+  } else {
+    _setdata(_extcall_prop);
+  }
+   _r = 1.;
  rates (  *getarg(1) );
  hoc_retpushx(_r);
 }
@@ -471,7 +486,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   eh = _ion_eh;
  { error =  states();
  if(error){
-  std_cerr_stream << "at line 30 in file Bip_HCN2.mod:\nBREAKPOINT {\n";
+  std_cerr_stream << "at line 32 in file Bip_HCN2.mod:\nBREAKPOINT {\n";
   std_cerr_stream << _ml << ' ' << _iml << '\n';
   abort_run(error);
 }
@@ -490,13 +505,14 @@ _first = 0;
 
 #if NMODL_TEXT
 static void register_nmodl_text_and_filename(int mech_type) {
-    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/Bip_HCN2.mod";
+    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/Bip_HCN2.mod";
     const char* nmodl_file_text = 
   "NEURON {\n"
   "    SUFFIX Bip_HCN2\n"
   "    USEION h READ eh WRITE ih\n"
   "    RANGE ghcn2_bar, ih\n"
   "    GLOBAL m_inf, tau_m\n"
+  "    RANGE vshift\n"
   "}\n"
   "\n"
   "UNITS {\n"
@@ -507,6 +523,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "PARAMETER {\n"
   "    ghcn2_bar = 0.1 (mS/cm2)  : From ON-type CBC section \n"
+  "    vshift = -53.08 (mV)\n"
   "}\n"
   "\n"
   "ASSIGNED {\n"
@@ -537,8 +554,10 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "}\n"
   "\n"
   "PROCEDURE rates(v (mV)) {\n"
+  "    LOCAL vred\n"
+  "    vred = v - vshift\n"
   "    : m (activation) steady-state and tau \n"
-  "    m_inf = 1 / (1 + exp((v + 42) / 6.2))\n"
+  "    m_inf = 1 / (1 + exp((vred + 42) / 6.2))\n"
   "    tau_m = 120  : constant tau_m \n"
   "}\n"
   ;

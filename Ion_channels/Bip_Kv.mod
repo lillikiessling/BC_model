@@ -3,6 +3,7 @@ NEURON {
     USEION k READ ek WRITE ik
     RANGE gk_bar, ik
     GLOBAL m_inf, h_inf, tau_m, tau_h
+    RANGE vshift
 }
 
 UNITS {
@@ -18,6 +19,7 @@ UNITS {
 
 PARAMETER {
     gk_bar = 14.3357 (mS/cm2) : Maximum potassium conductance
+    vshift = -53.08  (mV) 
 }
 
 ASSIGNED {
@@ -53,11 +55,14 @@ DERIVATIVE states {
 }
 
 PROCEDURE rates(v (mV)) {
+    LOCAL vred
+    vred = v - vshift
+
     : m (activation) steady-state and tau 
-    m_inf = 1 / (1 + exp((v - 50) / (-12.3)))
-    tau_m = 2.0304 + (27.913114 / (1 + exp((v - 27.4141) / 55.704638)))
-    
+    m_inf = 1 / (1 + exp((vred - 50) / (-12.3)))
+    tau_m = 2.0304 + (27.913114 / (1 + exp((vred - 27.4141) / 55.704638)))
+
     : h (inactivation) steady-state and tau 
-    h_inf = 0.05 + (0.95 / (1 + exp((v - 23.2939) / 19.385636)))
-    tau_h = 199.78 + 2776.11 * exp((-v - 5) / 55)
+    h_inf = 0.05 + (0.95 / (1 + exp((vred - 23.2939) / 19.385636)))
+    tau_h = 199.78 + 2776.11 * exp((-vred - 5) / 55)
 }

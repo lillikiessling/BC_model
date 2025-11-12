@@ -20,7 +20,7 @@
 using std::size_t;
 static auto& std_cerr_stream = std::cerr;
 static constexpr auto number_of_datum_variables = 3;
-static constexpr auto number_of_floating_point_variables = 8;
+static constexpr auto number_of_floating_point_variables = 7;
 namespace {
 template <typename T>
 using _nrn_mechanism_std_vector = std::vector<T>;
@@ -45,15 +45,15 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #endif
 #endif
  
-#define nrn_init _nrn_init__Bip_iNa
-#define _nrn_initial _nrn_initial__Bip_iNa
-#define nrn_cur _nrn_cur__Bip_iNa
-#define _nrn_current _nrn_current__Bip_iNa
-#define nrn_jacob _nrn_jacob__Bip_iNa
-#define nrn_state _nrn_state__Bip_iNa
-#define _net_receive _net_receive__Bip_iNa 
-#define rates rates__Bip_iNa 
-#define states states__Bip_iNa 
+#define nrn_init _nrn_init__Bip_HCN4
+#define _nrn_initial _nrn_initial__Bip_HCN4
+#define nrn_cur _nrn_cur__Bip_HCN4
+#define _nrn_current _nrn_current__Bip_HCN4
+#define nrn_jacob _nrn_jacob__Bip_HCN4
+#define nrn_state _nrn_state__Bip_HCN4
+#define _net_receive _net_receive__Bip_HCN4 
+#define rates rates__Bip_HCN4 
+#define states states__Bip_HCN4 
  
 #define _threadargscomma_ /**/
 #define _threadargsprotocomma_ /**/
@@ -69,27 +69,25 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
  
 #define t nrn_threads->_t
 #define dt nrn_threads->_dt
-#define gna_bar _ml->template fpfield<0>(_iml)
-#define gna_bar_columnindex 0
-#define ina _ml->template fpfield<1>(_iml)
-#define ina_columnindex 1
-#define m _ml->template fpfield<2>(_iml)
-#define m_columnindex 2
-#define h _ml->template fpfield<3>(_iml)
-#define h_columnindex 3
-#define ena _ml->template fpfield<4>(_iml)
-#define ena_columnindex 4
+#define ghcn4_bar _ml->template fpfield<0>(_iml)
+#define ghcn4_bar_columnindex 0
+#define vshift _ml->template fpfield<1>(_iml)
+#define vshift_columnindex 1
+#define ih _ml->template fpfield<2>(_iml)
+#define ih_columnindex 2
+#define m _ml->template fpfield<3>(_iml)
+#define m_columnindex 3
+#define eh _ml->template fpfield<4>(_iml)
+#define eh_columnindex 4
 #define Dm _ml->template fpfield<5>(_iml)
 #define Dm_columnindex 5
-#define Dh _ml->template fpfield<6>(_iml)
-#define Dh_columnindex 6
-#define _g _ml->template fpfield<7>(_iml)
-#define _g_columnindex 7
-#define _ion_ena *(_ml->dptr_field<0>(_iml))
-#define _p_ion_ena static_cast<neuron::container::data_handle<double>>(_ppvar[0])
-#define _ion_ina *(_ml->dptr_field<1>(_iml))
-#define _p_ion_ina static_cast<neuron::container::data_handle<double>>(_ppvar[1])
-#define _ion_dinadv *(_ml->dptr_field<2>(_iml))
+#define _g _ml->template fpfield<6>(_iml)
+#define _g_columnindex 6
+#define _ion_eh *(_ml->dptr_field<0>(_iml))
+#define _p_ion_eh static_cast<neuron::container::data_handle<double>>(_ppvar[0])
+#define _ion_ih *(_ml->dptr_field<1>(_iml))
+#define _p_ion_ih static_cast<neuron::container::data_handle<double>>(_ppvar[1])
+#define _ion_dihdv *(_ml->dptr_field<2>(_iml))
  static _nrn_mechanism_cache_instance _ml_real{nullptr};
 static _nrn_mechanism_cache_range *_ml{&_ml_real};
 static size_t _iml{0};
@@ -114,8 +112,8 @@ static void register_nmodl_text_and_filename(int mechtype);
  static void _hoc_setdata();
  /* connect user functions to hoc names */
  static VoidFunc hoc_intfunc[] = {
- {"setdata_Bip_iNa", _hoc_setdata},
- {"rates_Bip_iNa", _hoc_rates},
+ {"setdata_Bip_HCN4", _hoc_setdata},
+ {"rates_Bip_HCN4", _hoc_rates},
  {0, 0}
 };
  
@@ -129,35 +127,28 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  /* declare global and static user variables */
  #define gind 0
  #define _gth 0
-#define h_inf h_inf_Bip_iNa
- double h_inf = 0;
-#define m_inf m_inf_Bip_iNa
+#define m_inf m_inf_Bip_HCN4
  double m_inf = 0;
-#define tau_h tau_h_Bip_iNa
- double tau_h = 0;
-#define tau_m tau_m_Bip_iNa
+#define tau_m tau_m_Bip_HCN4
  double tau_m = 0;
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  {0, 0, 0}
 };
  static HocParmUnits _hoc_parm_units[] = {
- {"tau_m_Bip_iNa", "ms"},
- {"tau_h_Bip_iNa", "ms"},
- {"gna_bar_Bip_iNa", "mS/cm2"},
- {"ina_Bip_iNa", "mA/cm2"},
+ {"tau_m_Bip_HCN4", "ms"},
+ {"ghcn4_bar_Bip_HCN4", "mS/cm2"},
+ {"vshift_Bip_HCN4", "mV"},
+ {"ih_Bip_HCN4", "mA/cm2"},
  {0, 0}
 };
  static double delta_t = 0.01;
- static double h0 = 0;
  static double m0 = 0;
  static double v = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
- {"m_inf_Bip_iNa", &m_inf_Bip_iNa},
- {"h_inf_Bip_iNa", &h_inf_Bip_iNa},
- {"tau_m_Bip_iNa", &tau_m_Bip_iNa},
- {"tau_h_Bip_iNa", &tau_h_Bip_iNa},
+ {"m_inf_Bip_HCN4", &m_inf_Bip_HCN4},
+ {"tau_m_Bip_HCN4", &tau_m_Bip_HCN4},
  {0, 0}
 };
  static DoubVec hoc_vdoub[] = {
@@ -195,20 +186,21 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "7.7.0",
-"Bip_iNa",
- "gna_bar_Bip_iNa",
+"Bip_HCN4",
+ "ghcn4_bar_Bip_HCN4",
+ "vshift_Bip_HCN4",
  0,
- "ina_Bip_iNa",
+ "ih_Bip_HCN4",
  0,
- "m_Bip_iNa",
- "h_Bip_iNa",
+ "m_Bip_HCN4",
  0,
  0};
- static Symbol* _na_sym;
+ static Symbol* _h_sym;
  
  /* Used by NrnProperty */
  static _nrn_mechanism_std_vector<double> _parm_default{
-     2.22858, /* gna_bar */
+     0.176, /* ghcn4_bar */
+     -53.08, /* vshift */
  }; 
  
  
@@ -221,17 +213,18 @@ static void nrn_alloc(Prop* _prop) {
      _nrn_mechanism_cache_instance _ml_real{_prop};
     auto* const _ml = &_ml_real;
     size_t const _iml{};
-    assert(_nrn_mechanism_get_num_vars(_prop) == 8);
+    assert(_nrn_mechanism_get_num_vars(_prop) == 7);
  	/*initialize range parameters*/
- 	gna_bar = _parm_default[0]; /* 2.22858 */
- 	 assert(_nrn_mechanism_get_num_vars(_prop) == 8);
+ 	ghcn4_bar = _parm_default[0]; /* 0.176 */
+ 	vshift = _parm_default[1]; /* -53.08 */
+ 	 assert(_nrn_mechanism_get_num_vars(_prop) == 7);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
- prop_ion = need_memb(_na_sym);
+ prop_ion = need_memb(_h_sym);
  nrn_promote(prop_ion, 0, 1);
- 	_ppvar[0] = _nrn_mechanism_get_param_handle(prop_ion, 0); /* ena */
- 	_ppvar[1] = _nrn_mechanism_get_param_handle(prop_ion, 3); /* ina */
- 	_ppvar[2] = _nrn_mechanism_get_param_handle(prop_ion, 4); /* _ion_dinadv */
+ 	_ppvar[0] = _nrn_mechanism_get_param_handle(prop_ion, 0); /* eh */
+ 	_ppvar[1] = _nrn_mechanism_get_param_handle(prop_ion, 3); /* ih */
+ 	_ppvar[2] = _nrn_mechanism_get_param_handle(prop_ion, 4); /* _ion_dihdv */
  
 }
  static void _initlists();
@@ -246,11 +239,11 @@ void _nrn_thread_table_reg(int, nrn_thread_table_check_t);
 extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
- extern "C" void _Bip_iNa_reg() {
+ extern "C" void _BiP_HCN4_reg() {
 	int _vectorized = 0;
   _initlists();
- 	ion_reg("na", -10000.);
- 	_na_sym = hoc_lookup("na_ion");
+ 	ion_reg("h", -10000.);
+ 	_h_sym = hoc_lookup("h_ion");
  	register_mech(_mechanism, nrn_alloc,nrn_cur, nrn_jacob, nrn_state, nrn_init, hoc_nrnpointerindex, 0);
  _mechtype = nrn_get_mechtype(_mechanism[1]);
  hoc_register_parm_default(_mechtype, &_parm_default);
@@ -260,33 +253,30 @@ extern void _cvode_abstol( Symbol**, double*, int);
   register_nmodl_text_and_filename(_mechtype);
 #endif
    _nrn_mechanism_register_data_fields(_mechtype,
-                                       _nrn_mechanism_field<double>{"gna_bar"} /* 0 */,
-                                       _nrn_mechanism_field<double>{"ina"} /* 1 */,
-                                       _nrn_mechanism_field<double>{"m"} /* 2 */,
-                                       _nrn_mechanism_field<double>{"h"} /* 3 */,
-                                       _nrn_mechanism_field<double>{"ena"} /* 4 */,
+                                       _nrn_mechanism_field<double>{"ghcn4_bar"} /* 0 */,
+                                       _nrn_mechanism_field<double>{"vshift"} /* 1 */,
+                                       _nrn_mechanism_field<double>{"ih"} /* 2 */,
+                                       _nrn_mechanism_field<double>{"m"} /* 3 */,
+                                       _nrn_mechanism_field<double>{"eh"} /* 4 */,
                                        _nrn_mechanism_field<double>{"Dm"} /* 5 */,
-                                       _nrn_mechanism_field<double>{"Dh"} /* 6 */,
-                                       _nrn_mechanism_field<double>{"_g"} /* 7 */,
-                                       _nrn_mechanism_field<double*>{"_ion_ena", "na_ion"} /* 0 */,
-                                       _nrn_mechanism_field<double*>{"_ion_ina", "na_ion"} /* 1 */,
-                                       _nrn_mechanism_field<double*>{"_ion_dinadv", "na_ion"} /* 2 */,
+                                       _nrn_mechanism_field<double>{"_g"} /* 6 */,
+                                       _nrn_mechanism_field<double*>{"_ion_eh", "h_ion"} /* 0 */,
+                                       _nrn_mechanism_field<double*>{"_ion_ih", "h_ion"} /* 1 */,
+                                       _nrn_mechanism_field<double*>{"_ion_dihdv", "h_ion"} /* 2 */,
                                        _nrn_mechanism_field<int>{"_cvode_ieq", "cvodeieq"} /* 3 */);
-  hoc_register_prop_size(_mechtype, 8, 4);
-  hoc_register_dparam_semantics(_mechtype, 0, "na_ion");
-  hoc_register_dparam_semantics(_mechtype, 1, "na_ion");
-  hoc_register_dparam_semantics(_mechtype, 2, "na_ion");
+  hoc_register_prop_size(_mechtype, 7, 4);
+  hoc_register_dparam_semantics(_mechtype, 0, "h_ion");
+  hoc_register_dparam_semantics(_mechtype, 1, "h_ion");
+  hoc_register_dparam_semantics(_mechtype, 2, "h_ion");
   hoc_register_dparam_semantics(_mechtype, 3, "cvodeieq");
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 Bip_iNa /Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/Bip_iNa.mod\n");
+ 	ivoc_help("help ?1 Bip_HCN4 /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/BiP_HCN4.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
- static double FARADAY = 96485.3;
- static double R = 8.3134;
 static int _reset;
 static const char *modelname = "";
 
@@ -298,7 +288,7 @@ static int rates(double);
  
 static int _ode_spec1(_internalthreadargsproto_);
 /*static int _ode_matsol1(_internalthreadargsproto_);*/
- static neuron::container::field_index _slist1[2], _dlist1[2];
+ static neuron::container::field_index _slist1[1], _dlist1[1];
  static int states(_internalthreadargsproto_);
  
 /*CVODE*/
@@ -306,14 +296,12 @@ static int _ode_spec1(_internalthreadargsproto_);
  {
    rates ( _threadargscomma_ v ) ;
    Dm = ( m_inf - m ) / tau_m ;
-   Dh = ( h_inf - h ) / tau_h ;
    }
  return _reset;
 }
  static int _ode_matsol1 () {
  rates ( _threadargscomma_ v ) ;
  Dm = Dm  / (1. - dt*( ( ( ( - 1.0 ) ) ) / tau_m )) ;
- Dh = Dh  / (1. - dt*( ( ( ( - 1.0 ) ) ) / tau_h )) ;
   return 0;
 }
  /*END CVODE*/
@@ -321,26 +309,26 @@ static int _ode_spec1(_internalthreadargsproto_);
  {
    rates ( _threadargscomma_ v ) ;
     m = m + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / tau_m)))*(- ( ( ( m_inf ) ) / tau_m ) / ( ( ( ( - 1.0 ) ) ) / tau_m ) - m) ;
-    h = h + (1. - exp(dt*(( ( ( - 1.0 ) ) ) / tau_h)))*(- ( ( ( h_inf ) ) / tau_h ) / ( ( ( ( - 1.0 ) ) ) / tau_h ) - h) ;
    }
   return 0;
 }
  
 static int  rates (  double _lv ) {
-   double _lalpha_m , _lbeta_m , _lalpha_h , _lbeta_h , _lsum_m , _lsum_h ;
- _lalpha_m = 0.271 * exp ( _lv / 30.075 ) ;
-   _lbeta_m = 10.0 / ( exp ( ( _lv + 25.2619 ) / 10.1191 ) + 1.0 ) ;
-   tau_m = 1.0 / ( _lalpha_m + _lbeta_m ) ;
-   m_inf = _lalpha_m / ( _lalpha_m + _lbeta_m ) ;
-   _lalpha_h = 0.3898 * exp ( ( 1.6482 - _lv ) / 12.2978 ) ;
-   _lbeta_h = 0.6624 / ( exp ( ( - 44.9996 - _lv ) / 40.0 ) + 1.0 ) ;
-   tau_h = 1.0 / ( _lalpha_h + _lbeta_h ) ;
-   h_inf = _lalpha_h / ( _lalpha_h + _lbeta_h ) ;
+   double _lvred ;
+ _lvred = _lv - vshift ;
+   m_inf = 1.0 / ( 1.0 + exp ( ( _lvred + 60.0 ) / 9.6 ) ) ;
+   tau_m = 461.0 ;
     return 0; }
  
 static void _hoc_rates(void) {
   double _r;
-    _r = 1.;
+  
+  if(!_prop_id) {
+    hoc_execerror("No data for rates_Bip_HCN4. Requires prior call to setdata_Bip_HCN4 and that the specified mechanism instance still be in existence.", NULL);
+  } else {
+    _setdata(_extcall_prop);
+  }
+   _r = 1.;
  rates (  *getarg(1) );
  hoc_retpushx(_r);
 }
@@ -354,7 +342,7 @@ static double _npy_rates(Prop* _prop) {
  return(_r);
 }
  
-static int _ode_count(int _type){ return 2;}
+static int _ode_count(int _type){ return 1;}
  
 static void _ode_spec(_nrn_model_sorted_token const& _sorted_token, NrnThread* _nt, Memb_list* _ml_arg, int _type) {
       Node* _nd{};
@@ -370,14 +358,14 @@ static void _ode_spec(_nrn_model_sorted_token const& _sorted_token, NrnThread* _
     _ppvar = _ml_arg->_pdata[_iml];
     _nd = _ml_arg->_nodelist[_iml];
     v = NODEV(_nd);
-  ena = _ion_ena;
+  eh = _ion_eh;
      _ode_spec1 ();
   }}
  
 static void _ode_map(Prop* _prop, int _ieq, neuron::container::data_handle<double>* _pv, neuron::container::data_handle<double>* _pvdot, double* _atol, int _type) { 
   _ppvar = _nrn_mechanism_access_dparam(_prop);
   _cvode_ieq = _ieq;
-  for (int _i=0; _i < 2; ++_i) {
+  for (int _i=0; _i < 1; ++_i) {
     _pv[_i] = _nrn_mechanism_get_param_handle(_prop, _slist1[_i]);
     _pvdot[_i] = _nrn_mechanism_get_param_handle(_prop, _dlist1[_i]);
     _cvode_abstol(_atollist, _atol, _i);
@@ -402,7 +390,7 @@ static void _ode_matsol(_nrn_model_sorted_token const& _sorted_token, NrnThread*
     _ppvar = _ml_arg->_pdata[_iml];
     _nd = _ml_arg->_nodelist[_iml];
     v = NODEV(_nd);
-  ena = _ion_ena;
+  eh = _ion_eh;
  _ode_matsol_instance1(_threadargs_);
  }}
 
@@ -411,12 +399,10 @@ static void initmodel() {
  _save = t;
  t = 0.0;
 {
-  h = h0;
   m = m0;
  {
    rates ( _threadargscomma_ v ) ;
    m = m_inf ;
-   h = h_inf ;
    }
   _sav_indep = t; t = _save;
 
@@ -434,14 +420,14 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  _ppvar = _ml_arg->_pdata[_iml];
    _v = _vec_v[_ni[_iml]];
  v = _v;
-  ena = _ion_ena;
+  eh = _ion_eh;
  initmodel();
  }}
 
 static double _nrn_current(double _v){double _current=0.;v=_v;{ {
-   ina = gna_bar * pow( m , 3.0 ) * h * ( v - ena ) ;
+   ih = ghcn4_bar * m * ( v - eh ) ;
    }
- _current += ina;
+ _current += ih;
 
 } return _current;
 }
@@ -458,15 +444,15 @@ _cntml = _ml_arg->_nodecount;
 for (_iml = 0; _iml < _cntml; ++_iml) {
  _ppvar = _ml_arg->_pdata[_iml];
    _v = _vec_v[_ni[_iml]];
-  ena = _ion_ena;
+  eh = _ion_eh;
  auto const _g_local = _nrn_current(_v + .001);
- 	{ double _dina;
-  _dina = ina;
+ 	{ double _dih;
+  _dih = ih;
  _rhs = _nrn_current(_v);
-  _ion_dinadv += (_dina - ina)/.001 ;
+  _ion_dihdv += (_dih - ih)/.001 ;
  	}
  _g = (_g_local - _rhs)/.001;
-  _ion_ina += ina ;
+  _ion_ih += ih ;
 	 _vec_rhs[_ni[_iml]] -= _rhs;
  
 }}
@@ -497,10 +483,10 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
    _v = _vec_v[_ni[_iml]];
  v=_v;
 {
-  ena = _ion_ena;
+  eh = _ion_eh;
  { error =  states();
  if(error){
-  std_cerr_stream << "at line 38 in file Bip_iNa.mod:\nBREAKPOINT {\n";
+  std_cerr_stream << "at line 32 in file BiP_HCN4.mod:\nBREAKPOINT {\n";
   std_cerr_stream << _ml << ' ' << _iml << '\n';
   abort_run(error);
 }
@@ -514,82 +500,64 @@ static void _initlists() {
  int _i; static int _first = 1;
   if (!_first) return;
  _slist1[0] = {m_columnindex, 0};  _dlist1[0] = {Dm_columnindex, 0};
- _slist1[1] = {h_columnindex, 0};  _dlist1[1] = {Dh_columnindex, 0};
 _first = 0;
 }
 
 #if NMODL_TEXT
 static void register_nmodl_text_and_filename(int mech_type) {
-    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/BC_model_new/Ion_channels/Bip_iNa.mod";
+    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/BiP_HCN4.mod";
     const char* nmodl_file_text = 
   "NEURON {\n"
-  "    SUFFIX Bip_iNa\n"
-  "    USEION na READ ena WRITE ina\n"
-  "    RANGE gna_bar, ina\n"
-  "    GLOBAL m_inf, h_inf, tau_m, tau_h\n"
+  "    SUFFIX Bip_HCN4\n"
+  "    USEION h READ eh WRITE ih\n"
+  "    RANGE ghcn4_bar, ih\n"
+  "    GLOBAL m_inf, tau_m\n"
+  "    RANGE vshift\n"
   "}\n"
   "\n"
   "UNITS {\n"
-  "    (mV) = (millivolt)\n"
   "    (mA) = (milliamp)\n"
-  "    (S) = (siemens)\n"
+  "    (mV) = (millivolt)\n"
   "    (mS) = (millisiemens)\n"
-  "    (pS) = (picosiemens)\n"
-  "    (um) = (micron)\n"
-  "    FARADAY = 96485.3 (coul)\n"
-  "    R = 8.3134 (joule/degC)\n"
   "}\n"
   "\n"
   "PARAMETER {\n"
-  "    gna_bar = 2.22858 (mS/cm2): Maximum sodium conductance\n"
+  "    ghcn4_bar = 0.176 (mS/cm2)  \n"
+  "    vshift = -53.08  (mV)\n"
   "}\n"
   "\n"
   "ASSIGNED {\n"
   "    v (mV)\n"
-  "    ena (mV)\n"
-  "    ina (mA/cm2)\n"
+  "    eh (mV)\n"
+  "    ih (mA/cm2)\n"
   "    m_inf\n"
-  "    h_inf\n"
   "    tau_m (ms)\n"
-  "    tau_h (ms)\n"
   "}\n"
   "\n"
   "STATE {\n"
   "    m\n"
-  "    h\n"
   "}\n"
   "\n"
   "BREAKPOINT {\n"
   "    SOLVE states METHOD cnexp\n"
-  "    ina = gna_bar * m^3 * h * (v - ena)\n"
+  "    ih = ghcn4_bar * m * (v - eh)\n"
   "}\n"
   "\n"
   "INITIAL {\n"
   "    rates(v)\n"
   "    m = m_inf\n"
-  "    h = h_inf\n"
   "}\n"
   "\n"
   "DERIVATIVE states {\n"
   "    rates(v)\n"
   "    m' = (m_inf - m) / tau_m\n"
-  "    h' = (h_inf - h) / tau_h\n"
   "}\n"
   "\n"
   "PROCEDURE rates(v (mV)) {\n"
-  "    LOCAL alpha_m, beta_m, alpha_h, beta_h, sum_m, sum_h\n"
-  "\n"
-  "    :Sodium activation\n"
-  "    alpha_m = 0.271 * exp(v/30.075)\n"
-  "    beta_m = 10 / (exp((v+25.2619)/10.1191)+1)\n"
-  "    tau_m = 1 / (alpha_m + beta_m)\n"
-  "    m_inf = alpha_m / (alpha_m + beta_m)\n"
-  "\n"
-  "    :Sodium inactivation\n"
-  "    alpha_h = 0.3898 * exp((1.6482 - v)/12.2978)\n"
-  "    beta_h = 0.6624 / (exp((-44.9996 - v)/40) + 1)\n"
-  "    tau_h = 1 / (alpha_h + beta_h)\n"
-  "    h_inf = alpha_h / (alpha_h + beta_h)\n"
+  "    LOCAL vred\n"
+  "    vred = v - vshift\n"
+  "    m_inf = 1 / (1 + exp((vred + 60) / 9.6))\n"
+  "    tau_m = 461\n"
   "}\n"
   ;
     hoc_reg_nmodl_filename(mech_type, nmodl_filename);

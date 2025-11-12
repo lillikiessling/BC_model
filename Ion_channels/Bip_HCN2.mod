@@ -3,6 +3,7 @@ NEURON {
     USEION h READ eh WRITE ih
     RANGE ghcn2_bar, ih
     GLOBAL m_inf, tau_m
+    RANGE vshift
 }
 
 UNITS {
@@ -13,6 +14,7 @@ UNITS {
 
 PARAMETER {
     ghcn2_bar = 0.1 (mS/cm2)  : From ON-type CBC section 
+    vshift = -53.08 (mV)
 }
 
 ASSIGNED {
@@ -43,7 +45,9 @@ DERIVATIVE states {
 }
 
 PROCEDURE rates(v (mV)) {
+    LOCAL vred
+    vred = v - vshift
     : m (activation) steady-state and tau 
-    m_inf = 1 / (1 + exp((v + 42) / 6.2))
+    m_inf = 1 / (1 + exp((vred + 42) / 6.2))
     tau_m = 120  : constant tau_m 
 }

@@ -1,4 +1,4 @@
-#!/Users/lillikiessling/Documents/Stanford/BC_model_new/.venv/bin/python3.13
+#!/Users/lillikiessling/Documents/Stanford/Code/BC_model/.venv/bin/python3.13
 """
 A generic wrapper to access nrn binaries from a python installation
 Please create a softlink with the binary name to be called.
