@@ -1,1 +1,18 @@
+# Logs
 *.log
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environments
+venv/
+.env/
+
+# Old code
+old_code/
+
+# Optional: editor-specific files
+.vscode/
+.idea/
+*.swp
