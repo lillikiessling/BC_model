@@ -16,3 +16,6 @@ old_code/
 .vscode/
 .idea/
 *.swp
+
+# NEURON compiled files
+nrn/

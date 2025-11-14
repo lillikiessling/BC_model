@@ -13,6 +13,7 @@ extern "C" void _Bip_KCa_reg(void);
 extern "C" void _Bip_Kir_reg(void);
 extern "C" void _Bip_Kv_reg(void);
 extern "C" void _Bip_Na_reg(void);
+extern "C" void _FCM_reg(void);
 extern "C" void _capump_reg(void);
 extern "C" void _xtra_reg(void);
 
@@ -29,6 +30,7 @@ extern "C" void modl_reg() {
     fprintf(stderr, " \"Bip_Kir.mod\"");
     fprintf(stderr, " \"Bip_Kv.mod\"");
     fprintf(stderr, " \"Bip_Na.mod\"");
+    fprintf(stderr, " \"FCM.mod\"");
     fprintf(stderr, " \"capump.mod\"");
     fprintf(stderr, " \"xtra.mod\"");
     fprintf(stderr, "\n");
@@ -43,6 +45,7 @@ extern "C" void modl_reg() {
   _Bip_Kir_reg();
   _Bip_Kv_reg();
   _Bip_Na_reg();
+  _FCM_reg();
   _capump_reg();
   _xtra_reg();
 }
