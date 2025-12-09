@@ -45,17 +45,10 @@ ASSIGNED {
     	m_tau h_tau
 }
 
-INITIAL { 
-	mrates(v)
-	hrates(v)
-
-	m = m_inf
-	h = h_inf
-}
 
 BREAKPOINT {
 	SOLVE states METHOD cnexp
-    	ica = (1e-3) * gcabar * m*m*h * (v-(0.32*eca+0.68*-58))
+    ica = (1e-3) * gcabar * m*m*h * (v-(0.32*eca+0.68*-58))
 }
 
 DERIVATIVE states {

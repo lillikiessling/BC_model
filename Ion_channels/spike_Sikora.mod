@@ -9,11 +9,11 @@ TITLE HH style channels for spiking retinal ganglion cells
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
-	SUFFIX FCM
+	SUFFIX spike
 	USEION na READ ena WRITE ina
 	USEION k READ ek WRITE ik
 	USEION ca READ cai, eca, cao WRITE ica
-	RANGE gnabar, gkbar, gabar, gcabar, gkcabar
+	RANGE gnabar, gkbar, gabar, gcabar, gkcbar
 	RANGE m_inf, h_inf, n_inf, p_inf, q_inf, c_inf
 	RANGE tau_m, tau_h, tau_n, tau_p, tau_q, tau_c
 	RANGE m_exp, h_exp, n_exp, p_exp, q_exp, c_exp
@@ -31,19 +31,18 @@ UNITS {
 }
 
 PARAMETER {
-	gnabar		(mS/cm2)
-	gkbar		(mS/cm2)
-	gabar		(mS/cm2)
-	gcabar		(mS/cm2)
-	gkcabar		(mS/cm2)
-	ena			(mV)
-	ek 			(mV)
-	eca			(mV)
-	cao=1.8		(mM)
-	cai=0.0001	(mM)
-	cadis=0.001	(mM)
-	dt         	(ms)
-	v           (mV)
+	gnabar	= 0.04	(mho/cm2)
+	gkbar	= 0.012 (mho/cm2)
+	gabar	= 0.036	(mho/cm2)
+	gcabar	= 0.002	(mho/cm2)
+	gkcbar	= 0.00005 (mho/cm2)
+	ena	= 35	(mV)
+	ek	= -75	(mV)
+	eca		(mV)
+	cao	= 1.8	(mM)
+	cai     = 0.0001 (mM)
+	dt              (ms)
+	v               (mV)
 
 }
 
@@ -52,6 +51,14 @@ STATE {
 }
 
 INITIAL {
+: The initial values were determined at a resting value of -66.3232 mV in a single-compartment
+:	m = 0.0155
+:	h = 0.9399
+:	n = 0.0768
+:	p = 0.0398
+:	q = 0.4526
+:	c = 0.0016
+: at -60 mV
         m = 0.0345
         h = 0.8594
         n = 0.1213
@@ -61,11 +68,11 @@ INITIAL {
 }
 
 ASSIGNED {
-	ina		(mA/cm2)
-	ik		(mA/cm2)
-    idrk    (mA/cm2)
-    iak     (mA/cm2)
-    icak    (mA/cm2)
+	ina	(mA/cm2)
+	ik	(mA/cm2)
+         idrk    (mA/cm2)
+         iak     (mA/cm2)
+         icak    (mA/cm2)
 	ica	(mA/cm2)
 	m_inf h_inf n_inf p_inf q_inf c_inf
 	tau_m tau_h tau_n tau_p tau_q tau_c
@@ -75,12 +82,12 @@ ASSIGNED {
 
 BREAKPOINT {
 	SOLVE states
-	ina = (1e-3) *gnabar * m*m*m*h * (v - ena)
-    idrk = (1e-3) *gkbar * n*n*n*n * (v - ek)
-    iak =  (1e-3) *gabar * p*p*p*q * (v - ek)
-    icak = (1e-3) *gkcabar * ((cai / cadis)/ (1 + (cai / cadis))) * (v - ek)
-    ik = idrk + iak + icak
-	ica = (1e-3) *gcabar * c*c*c * (v - eca)
+	ina = gnabar * m*m*m*h * (v - ena)
+        idrk = gkbar * n*n*n*n * (v - ek)
+        iak =  gabar * p*p*p*q * (v - ek)
+        icak = gkcbar * ((cai / 0.001)/ (1 + (cai / 0.001))) * (v - ek)
+        ik = idrk + iak + icak
+	ica = gcabar * c*c*c * (v - eca)
 
 }
 
@@ -145,5 +152,7 @@ PROCEDURE evaluate_fct(v(mV)) { LOCAL a,b
 	p_exp = 1 - exp(-dt/tau_p)
 	q_exp = 1 - exp(-dt/tau_q)
 	c_exp = 1 - exp(-dt/tau_c)
+
 }
+
 UNITSON

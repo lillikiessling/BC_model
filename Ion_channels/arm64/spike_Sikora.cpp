@@ -45,15 +45,15 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #endif
 #endif
  
-#define nrn_init _nrn_init__FCM
-#define _nrn_initial _nrn_initial__FCM
-#define nrn_cur _nrn_cur__FCM
-#define _nrn_current _nrn_current__FCM
-#define nrn_jacob _nrn_jacob__FCM
-#define nrn_state _nrn_state__FCM
-#define _net_receive _net_receive__FCM 
-#define evaluate_fct evaluate_fct__FCM 
-#define states states__FCM 
+#define nrn_init _nrn_init__spike
+#define _nrn_initial _nrn_initial__spike
+#define nrn_cur _nrn_cur__spike
+#define _nrn_current _nrn_current__spike
+#define nrn_jacob _nrn_jacob__spike
+#define nrn_state _nrn_state__spike
+#define _net_receive _net_receive__spike 
+#define evaluate_fct evaluate_fct__spike 
+#define states states__spike 
  
 #define _threadargscomma_ /**/
 #define _threadargsprotocomma_ /**/
@@ -77,8 +77,8 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #define gabar_columnindex 2
 #define gcabar _ml->template fpfield<3>(_iml)
 #define gcabar_columnindex 3
-#define gkcabar _ml->template fpfield<4>(_iml)
-#define gkcabar_columnindex 4
+#define gkcbar _ml->template fpfield<4>(_iml)
+#define gkcbar_columnindex 4
 #define idrk _ml->template fpfield<5>(_iml)
 #define idrk_columnindex 5
 #define iak _ml->template fpfield<6>(_iml)
@@ -207,9 +207,9 @@ static void register_nmodl_text_and_filename(int mechtype);
  static void _hoc_setdata();
  /* connect user functions to hoc names */
  static VoidFunc hoc_intfunc[] = {
- {"setdata_FCM", _hoc_setdata},
- {"evaluate_fct_FCM", _hoc_evaluate_fct},
- {"states_FCM", _hoc_states},
+ {"setdata_spike", _hoc_setdata},
+ {"evaluate_fct_spike", _hoc_evaluate_fct},
+ {"states_spike", _hoc_states},
  {0, 0}
 };
  
@@ -225,22 +225,19 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  /* declare global and static user variables */
  #define gind 0
  #define _gth 0
-#define cadis cadis_FCM
- double cadis = 0.001;
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  {0, 0, 0}
 };
  static HocParmUnits _hoc_parm_units[] = {
- {"cadis_FCM", "mM"},
- {"gnabar_FCM", "mS/cm2"},
- {"gkbar_FCM", "mS/cm2"},
- {"gabar_FCM", "mS/cm2"},
- {"gcabar_FCM", "mS/cm2"},
- {"gkcabar_FCM", "mS/cm2"},
- {"idrk_FCM", "mA/cm2"},
- {"iak_FCM", "mA/cm2"},
- {"icak_FCM", "mA/cm2"},
+ {"gnabar_spike", "mho/cm2"},
+ {"gkbar_spike", "mho/cm2"},
+ {"gabar_spike", "mho/cm2"},
+ {"gcabar_spike", "mho/cm2"},
+ {"gkcbar_spike", "mho/cm2"},
+ {"idrk_spike", "mA/cm2"},
+ {"iak_spike", "mA/cm2"},
+ {"icak_spike", "mA/cm2"},
  {0, 0}
 };
  static double c0 = 0;
@@ -253,7 +250,6 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  static double v = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
- {"cadis_FCM", &cadis_FCM},
  {0, 0}
 };
  static DoubVec hoc_vdoub[] = {
@@ -285,41 +281,41 @@ static int _ode_count(int);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "7.7.0",
-"FCM",
- "gnabar_FCM",
- "gkbar_FCM",
- "gabar_FCM",
- "gcabar_FCM",
- "gkcabar_FCM",
+"spike",
+ "gnabar_spike",
+ "gkbar_spike",
+ "gabar_spike",
+ "gcabar_spike",
+ "gkcbar_spike",
  0,
- "idrk_FCM",
- "iak_FCM",
- "icak_FCM",
- "m_inf_FCM",
- "h_inf_FCM",
- "n_inf_FCM",
- "p_inf_FCM",
- "q_inf_FCM",
- "c_inf_FCM",
- "tau_m_FCM",
- "tau_h_FCM",
- "tau_n_FCM",
- "tau_p_FCM",
- "tau_q_FCM",
- "tau_c_FCM",
- "m_exp_FCM",
- "h_exp_FCM",
- "n_exp_FCM",
- "p_exp_FCM",
- "q_exp_FCM",
- "c_exp_FCM",
+ "idrk_spike",
+ "iak_spike",
+ "icak_spike",
+ "m_inf_spike",
+ "h_inf_spike",
+ "n_inf_spike",
+ "p_inf_spike",
+ "q_inf_spike",
+ "c_inf_spike",
+ "tau_m_spike",
+ "tau_h_spike",
+ "tau_n_spike",
+ "tau_p_spike",
+ "tau_q_spike",
+ "tau_c_spike",
+ "m_exp_spike",
+ "h_exp_spike",
+ "n_exp_spike",
+ "p_exp_spike",
+ "q_exp_spike",
+ "c_exp_spike",
  0,
- "m_FCM",
- "h_FCM",
- "n_FCM",
- "p_FCM",
- "q_FCM",
- "c_FCM",
+ "m_spike",
+ "h_spike",
+ "n_spike",
+ "p_spike",
+ "q_spike",
+ "c_spike",
  0,
  0};
  static Symbol* _na_sym;
@@ -328,11 +324,11 @@ static int _ode_count(int);
  
  /* Used by NrnProperty */
  static _nrn_mechanism_std_vector<double> _parm_default{
-     0, /* gnabar */
-     0, /* gkbar */
-     0, /* gabar */
-     0, /* gcabar */
-     0, /* gkcabar */
+     0.04, /* gnabar */
+     0.012, /* gkbar */
+     0.036, /* gabar */
+     0.002, /* gcabar */
+     5e-05, /* gkcbar */
  }; 
  
  
@@ -347,11 +343,11 @@ static void nrn_alloc(Prop* _prop) {
     size_t const _iml{};
     assert(_nrn_mechanism_get_num_vars(_prop) == 47);
  	/*initialize range parameters*/
- 	gnabar = _parm_default[0]; /* 0 */
- 	gkbar = _parm_default[1]; /* 0 */
- 	gabar = _parm_default[2]; /* 0 */
- 	gcabar = _parm_default[3]; /* 0 */
- 	gkcabar = _parm_default[4]; /* 0 */
+ 	gnabar = _parm_default[0]; /* 0.04 */
+ 	gkbar = _parm_default[1]; /* 0.012 */
+ 	gabar = _parm_default[2]; /* 0.036 */
+ 	gcabar = _parm_default[3]; /* 0.002 */
+ 	gkcbar = _parm_default[4]; /* 5e-05 */
  	 assert(_nrn_mechanism_get_num_vars(_prop) == 47);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
@@ -381,7 +377,7 @@ void _nrn_thread_table_reg(int, nrn_thread_table_check_t);
 extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
- extern "C" void _FCM_reg() {
+ extern "C" void _spike_Sikora_reg() {
 	int _vectorized = 0;
   _initlists();
  	ion_reg("na", -10000.);
@@ -403,7 +399,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
                                        _nrn_mechanism_field<double>{"gkbar"} /* 1 */,
                                        _nrn_mechanism_field<double>{"gabar"} /* 2 */,
                                        _nrn_mechanism_field<double>{"gcabar"} /* 3 */,
-                                       _nrn_mechanism_field<double>{"gkcabar"} /* 4 */,
+                                       _nrn_mechanism_field<double>{"gkcbar"} /* 4 */,
                                        _nrn_mechanism_field<double>{"idrk"} /* 5 */,
                                        _nrn_mechanism_field<double>{"iak"} /* 6 */,
                                        _nrn_mechanism_field<double>{"icak"} /* 7 */,
@@ -472,7 +468,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_cvode(_mechtype, _ode_count, 0, 0, 0);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 FCM /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/FCM.mod\n");
+ 	ivoc_help("help ?1 spike /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/spike_Sikora.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -503,7 +499,7 @@ static void _hoc_states(void) {
   double _r;
   
   if(!_prop_id) {
-    hoc_execerror("No data for states_FCM. Requires prior call to setdata_FCM and that the specified mechanism instance still be in existence.", NULL);
+    hoc_execerror("No data for states_spike. Requires prior call to setdata_spike and that the specified mechanism instance still be in existence.", NULL);
   } else {
     _setdata(_extcall_prop);
   }
@@ -559,7 +555,7 @@ static void _hoc_evaluate_fct(void) {
   double _r;
   
   if(!_prop_id) {
-    hoc_execerror("No data for evaluate_fct_FCM. Requires prior call to setdata_FCM and that the specified mechanism instance still be in existence.", NULL);
+    hoc_execerror("No data for evaluate_fct_spike. Requires prior call to setdata_spike and that the specified mechanism instance still be in existence.", NULL);
   } else {
     _setdata(_extcall_prop);
   }
@@ -577,7 +573,7 @@ static double _npy_evaluate_fct(Prop* _prop) {
  return(_r);
 }
  
-static int _ode_count(int _type){ hoc_execerror("FCM", "cannot be used with CVODE"); return 0;}
+static int _ode_count(int _type){ hoc_execerror("spike", "cannot be used with CVODE"); return 0;}
 
 static void initmodel() {
   int _i; double _save;_ninits++;
@@ -623,12 +619,12 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
    }}
 
 static double _nrn_current(double _v){double _current=0.;v=_v;{ {
-   ina = ( 1e-3 ) * gnabar * m * m * m * h * ( v - ena ) ;
-   idrk = ( 1e-3 ) * gkbar * n * n * n * n * ( v - ek ) ;
-   iak = ( 1e-3 ) * gabar * p * p * p * q * ( v - ek ) ;
-   icak = ( 1e-3 ) * gkcabar * ( ( cai / cadis ) / ( 1.0 + ( cai / cadis ) ) ) * ( v - ek ) ;
+   ina = gnabar * m * m * m * h * ( v - ena ) ;
+   idrk = gkbar * n * n * n * n * ( v - ek ) ;
+   iak = gabar * p * p * p * q * ( v - ek ) ;
+   icak = gkcbar * ( ( cai / 0.001 ) / ( 1.0 + ( cai / 0.001 ) ) ) * ( v - ek ) ;
    ik = idrk + iak + icak ;
-   ica = ( 1e-3 ) * gcabar * c * c * c * ( v - eca ) ;
+   ica = gcabar * c * c * c * ( v - eca ) ;
    }
  _current += ina;
  _current += ik;
@@ -707,7 +703,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   cao = _ion_cao;
  { error =  states();
  if(error){
-  std_cerr_stream << "at line 77 in file FCM.mod:\n	SOLVE states\n";
+  std_cerr_stream << "at line 84 in file spike_Sikora.mod:\n	SOLVE states\n";
   std_cerr_stream << _ml << ' ' << _iml << '\n';
   abort_run(error);
 }
@@ -725,7 +721,7 @@ _first = 0;
 
 #if NMODL_TEXT
 static void register_nmodl_text_and_filename(int mech_type) {
-    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/FCM.mod";
+    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/spike_Sikora.mod";
     const char* nmodl_file_text = 
   "TITLE HH style channels for spiking retinal ganglion cells\n"
   ":\n"
@@ -738,11 +734,11 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}\n"
   "\n"
   "NEURON {\n"
-  "	SUFFIX FCM\n"
+  "	SUFFIX spike\n"
   "	USEION na READ ena WRITE ina\n"
   "	USEION k READ ek WRITE ik\n"
   "	USEION ca READ cai, eca, cao WRITE ica\n"
-  "	RANGE gnabar, gkbar, gabar, gcabar, gkcabar\n"
+  "	RANGE gnabar, gkbar, gabar, gcabar, gkcbar\n"
   "	RANGE m_inf, h_inf, n_inf, p_inf, q_inf, c_inf\n"
   "	RANGE tau_m, tau_h, tau_n, tau_p, tau_q, tau_c\n"
   "	RANGE m_exp, h_exp, n_exp, p_exp, q_exp, c_exp\n"
@@ -760,19 +756,18 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "}\n"
   "\n"
   "PARAMETER {\n"
-  "	gnabar		(mS/cm2)\n"
-  "	gkbar		(mS/cm2)\n"
-  "	gabar		(mS/cm2)\n"
-  "	gcabar		(mS/cm2)\n"
-  "	gkcabar		(mS/cm2)\n"
-  "	ena			(mV)\n"
-  "	ek 			(mV)\n"
-  "	eca			(mV)\n"
-  "	cao=1.8		(mM)\n"
-  "	cai=0.0001	(mM)\n"
-  "	cadis=0.001	(mM)\n"
-  "	dt         	(ms)\n"
-  "	v           (mV)\n"
+  "	gnabar	= 0.04	(mho/cm2)\n"
+  "	gkbar	= 0.012 (mho/cm2)\n"
+  "	gabar	= 0.036	(mho/cm2)\n"
+  "	gcabar	= 0.002	(mho/cm2)\n"
+  "	gkcbar	= 0.00005 (mho/cm2)\n"
+  "	ena	= 35	(mV)\n"
+  "	ek	= -75	(mV)\n"
+  "	eca		(mV)\n"
+  "	cao	= 1.8	(mM)\n"
+  "	cai     = 0.0001 (mM)\n"
+  "	dt              (ms)\n"
+  "	v               (mV)\n"
   "\n"
   "}\n"
   "\n"
@@ -781,6 +776,14 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "}\n"
   "\n"
   "INITIAL {\n"
+  ": The initial values were determined at a resting value of -66.3232 mV in a single-compartment\n"
+  ":	m = 0.0155\n"
+  ":	h = 0.9399\n"
+  ":	n = 0.0768\n"
+  ":	p = 0.0398\n"
+  ":	q = 0.4526\n"
+  ":	c = 0.0016\n"
+  ": at -60 mV\n"
   "        m = 0.0345\n"
   "        h = 0.8594\n"
   "        n = 0.1213\n"
@@ -790,11 +793,11 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "}\n"
   "\n"
   "ASSIGNED {\n"
-  "	ina		(mA/cm2)\n"
-  "	ik		(mA/cm2)\n"
-  "    idrk    (mA/cm2)\n"
-  "    iak     (mA/cm2)\n"
-  "    icak    (mA/cm2)\n"
+  "	ina	(mA/cm2)\n"
+  "	ik	(mA/cm2)\n"
+  "         idrk    (mA/cm2)\n"
+  "         iak     (mA/cm2)\n"
+  "         icak    (mA/cm2)\n"
   "	ica	(mA/cm2)\n"
   "	m_inf h_inf n_inf p_inf q_inf c_inf\n"
   "	tau_m tau_h tau_n tau_p tau_q tau_c\n"
@@ -804,12 +807,12 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "BREAKPOINT {\n"
   "	SOLVE states\n"
-  "	ina = (1e-3) *gnabar * m*m*m*h * (v - ena)\n"
-  "    idrk = (1e-3) *gkbar * n*n*n*n * (v - ek)\n"
-  "    iak =  (1e-3) *gabar * p*p*p*q * (v - ek)\n"
-  "    icak = (1e-3) *gkcabar * ((cai / cadis)/ (1 + (cai / cadis))) * (v - ek)\n"
-  "    ik = idrk + iak + icak\n"
-  "	ica = (1e-3) *gcabar * c*c*c * (v - eca)\n"
+  "	ina = gnabar * m*m*m*h * (v - ena)\n"
+  "        idrk = gkbar * n*n*n*n * (v - ek)\n"
+  "        iak =  gabar * p*p*p*q * (v - ek)\n"
+  "        icak = gkcbar * ((cai / 0.001)/ (1 + (cai / 0.001))) * (v - ek)\n"
+  "        ik = idrk + iak + icak\n"
+  "	ica = gcabar * c*c*c * (v - eca)\n"
   "\n"
   "}\n"
   "\n"
@@ -874,7 +877,9 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "	p_exp = 1 - exp(-dt/tau_p)\n"
   "	q_exp = 1 - exp(-dt/tau_q)\n"
   "	c_exp = 1 - exp(-dt/tau_c)\n"
+  "\n"
   "}\n"
+  "\n"
   "UNITSON\n"
   ;
     hoc_reg_nmodl_filename(mech_type, nmodl_filename);

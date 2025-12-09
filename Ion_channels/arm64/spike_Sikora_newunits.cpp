@@ -20,7 +20,7 @@
 using std::size_t;
 static auto& std_cerr_stream = std::cerr;
 static constexpr auto number_of_datum_variables = 11;
-static constexpr auto number_of_floating_point_variables = 47;
+static constexpr auto number_of_floating_point_variables = 46;
 namespace {
 template <typename T>
 using _nrn_mechanism_std_vector = std::vector<T>;
@@ -77,92 +77,90 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #define gabar_columnindex 2
 #define gcabar _ml->template fpfield<3>(_iml)
 #define gcabar_columnindex 3
-#define gkcabar _ml->template fpfield<4>(_iml)
-#define gkcabar_columnindex 4
-#define idrk _ml->template fpfield<5>(_iml)
-#define idrk_columnindex 5
-#define iak _ml->template fpfield<6>(_iml)
-#define iak_columnindex 6
-#define icak _ml->template fpfield<7>(_iml)
-#define icak_columnindex 7
-#define m_inf _ml->template fpfield<8>(_iml)
-#define m_inf_columnindex 8
-#define h_inf _ml->template fpfield<9>(_iml)
-#define h_inf_columnindex 9
-#define n_inf _ml->template fpfield<10>(_iml)
-#define n_inf_columnindex 10
-#define p_inf _ml->template fpfield<11>(_iml)
-#define p_inf_columnindex 11
-#define q_inf _ml->template fpfield<12>(_iml)
-#define q_inf_columnindex 12
-#define c_inf _ml->template fpfield<13>(_iml)
-#define c_inf_columnindex 13
-#define tau_m _ml->template fpfield<14>(_iml)
-#define tau_m_columnindex 14
-#define tau_h _ml->template fpfield<15>(_iml)
-#define tau_h_columnindex 15
-#define tau_n _ml->template fpfield<16>(_iml)
-#define tau_n_columnindex 16
-#define tau_p _ml->template fpfield<17>(_iml)
-#define tau_p_columnindex 17
-#define tau_q _ml->template fpfield<18>(_iml)
-#define tau_q_columnindex 18
-#define tau_c _ml->template fpfield<19>(_iml)
-#define tau_c_columnindex 19
-#define m_exp _ml->template fpfield<20>(_iml)
-#define m_exp_columnindex 20
-#define h_exp _ml->template fpfield<21>(_iml)
-#define h_exp_columnindex 21
-#define n_exp _ml->template fpfield<22>(_iml)
-#define n_exp_columnindex 22
-#define p_exp _ml->template fpfield<23>(_iml)
-#define p_exp_columnindex 23
-#define q_exp _ml->template fpfield<24>(_iml)
-#define q_exp_columnindex 24
-#define c_exp _ml->template fpfield<25>(_iml)
-#define c_exp_columnindex 25
-#define m _ml->template fpfield<26>(_iml)
-#define m_columnindex 26
-#define h _ml->template fpfield<27>(_iml)
-#define h_columnindex 27
-#define n _ml->template fpfield<28>(_iml)
-#define n_columnindex 28
-#define p _ml->template fpfield<29>(_iml)
-#define p_columnindex 29
-#define q _ml->template fpfield<30>(_iml)
-#define q_columnindex 30
-#define c _ml->template fpfield<31>(_iml)
-#define c_columnindex 31
-#define ena _ml->template fpfield<32>(_iml)
-#define ena_columnindex 32
-#define ek _ml->template fpfield<33>(_iml)
-#define ek_columnindex 33
-#define eca _ml->template fpfield<34>(_iml)
-#define eca_columnindex 34
-#define cao _ml->template fpfield<35>(_iml)
-#define cao_columnindex 35
-#define cai _ml->template fpfield<36>(_iml)
-#define cai_columnindex 36
-#define Dm _ml->template fpfield<37>(_iml)
-#define Dm_columnindex 37
-#define Dh _ml->template fpfield<38>(_iml)
-#define Dh_columnindex 38
-#define Dn _ml->template fpfield<39>(_iml)
-#define Dn_columnindex 39
-#define Dp _ml->template fpfield<40>(_iml)
-#define Dp_columnindex 40
-#define Dq _ml->template fpfield<41>(_iml)
-#define Dq_columnindex 41
-#define Dc _ml->template fpfield<42>(_iml)
-#define Dc_columnindex 42
-#define ina _ml->template fpfield<43>(_iml)
-#define ina_columnindex 43
-#define ik _ml->template fpfield<44>(_iml)
-#define ik_columnindex 44
-#define ica _ml->template fpfield<45>(_iml)
-#define ica_columnindex 45
-#define _g _ml->template fpfield<46>(_iml)
-#define _g_columnindex 46
+#define idrk _ml->template fpfield<4>(_iml)
+#define idrk_columnindex 4
+#define iak _ml->template fpfield<5>(_iml)
+#define iak_columnindex 5
+#define icak _ml->template fpfield<6>(_iml)
+#define icak_columnindex 6
+#define m_inf _ml->template fpfield<7>(_iml)
+#define m_inf_columnindex 7
+#define h_inf _ml->template fpfield<8>(_iml)
+#define h_inf_columnindex 8
+#define n_inf _ml->template fpfield<9>(_iml)
+#define n_inf_columnindex 9
+#define p_inf _ml->template fpfield<10>(_iml)
+#define p_inf_columnindex 10
+#define q_inf _ml->template fpfield<11>(_iml)
+#define q_inf_columnindex 11
+#define c_inf _ml->template fpfield<12>(_iml)
+#define c_inf_columnindex 12
+#define tau_m _ml->template fpfield<13>(_iml)
+#define tau_m_columnindex 13
+#define tau_h _ml->template fpfield<14>(_iml)
+#define tau_h_columnindex 14
+#define tau_n _ml->template fpfield<15>(_iml)
+#define tau_n_columnindex 15
+#define tau_p _ml->template fpfield<16>(_iml)
+#define tau_p_columnindex 16
+#define tau_q _ml->template fpfield<17>(_iml)
+#define tau_q_columnindex 17
+#define tau_c _ml->template fpfield<18>(_iml)
+#define tau_c_columnindex 18
+#define m_exp _ml->template fpfield<19>(_iml)
+#define m_exp_columnindex 19
+#define h_exp _ml->template fpfield<20>(_iml)
+#define h_exp_columnindex 20
+#define n_exp _ml->template fpfield<21>(_iml)
+#define n_exp_columnindex 21
+#define p_exp _ml->template fpfield<22>(_iml)
+#define p_exp_columnindex 22
+#define q_exp _ml->template fpfield<23>(_iml)
+#define q_exp_columnindex 23
+#define c_exp _ml->template fpfield<24>(_iml)
+#define c_exp_columnindex 24
+#define m _ml->template fpfield<25>(_iml)
+#define m_columnindex 25
+#define h _ml->template fpfield<26>(_iml)
+#define h_columnindex 26
+#define n _ml->template fpfield<27>(_iml)
+#define n_columnindex 27
+#define p _ml->template fpfield<28>(_iml)
+#define p_columnindex 28
+#define q _ml->template fpfield<29>(_iml)
+#define q_columnindex 29
+#define c _ml->template fpfield<30>(_iml)
+#define c_columnindex 30
+#define ena _ml->template fpfield<31>(_iml)
+#define ena_columnindex 31
+#define ek _ml->template fpfield<32>(_iml)
+#define ek_columnindex 32
+#define eca _ml->template fpfield<33>(_iml)
+#define eca_columnindex 33
+#define cao _ml->template fpfield<34>(_iml)
+#define cao_columnindex 34
+#define cai _ml->template fpfield<35>(_iml)
+#define cai_columnindex 35
+#define Dm _ml->template fpfield<36>(_iml)
+#define Dm_columnindex 36
+#define Dh _ml->template fpfield<37>(_iml)
+#define Dh_columnindex 37
+#define Dn _ml->template fpfield<38>(_iml)
+#define Dn_columnindex 38
+#define Dp _ml->template fpfield<39>(_iml)
+#define Dp_columnindex 39
+#define Dq _ml->template fpfield<40>(_iml)
+#define Dq_columnindex 40
+#define Dc _ml->template fpfield<41>(_iml)
+#define Dc_columnindex 41
+#define ina _ml->template fpfield<42>(_iml)
+#define ina_columnindex 42
+#define ik _ml->template fpfield<43>(_iml)
+#define ik_columnindex 43
+#define ica _ml->template fpfield<44>(_iml)
+#define ica_columnindex 44
+#define _g _ml->template fpfield<45>(_iml)
+#define _g_columnindex 45
 #define _ion_ena *(_ml->dptr_field<0>(_iml))
 #define _p_ion_ena static_cast<neuron::container::data_handle<double>>(_ppvar[0])
 #define _ion_ina *(_ml->dptr_field<1>(_iml))
@@ -227,17 +225,19 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  #define _gth 0
 #define cadis cadis_FCM
  double cadis = 0.001;
+#define gkcabar gkcabar_FCM
+ double gkcabar = 0;
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  {0, 0, 0}
 };
  static HocParmUnits _hoc_parm_units[] = {
+ {"gkcabar_FCM", "mS/cm2"},
  {"cadis_FCM", "mM"},
  {"gnabar_FCM", "mS/cm2"},
  {"gkbar_FCM", "mS/cm2"},
  {"gabar_FCM", "mS/cm2"},
  {"gcabar_FCM", "mS/cm2"},
- {"gkcabar_FCM", "mS/cm2"},
  {"idrk_FCM", "mA/cm2"},
  {"iak_FCM", "mA/cm2"},
  {"icak_FCM", "mA/cm2"},
@@ -253,6 +253,7 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  static double v = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
+ {"gkcabar_FCM", &gkcabar_FCM},
  {"cadis_FCM", &cadis_FCM},
  {0, 0}
 };
@@ -290,7 +291,6 @@ static int _ode_count(int);
  "gkbar_FCM",
  "gabar_FCM",
  "gcabar_FCM",
- "gkcabar_FCM",
  0,
  "idrk_FCM",
  "iak_FCM",
@@ -332,7 +332,6 @@ static int _ode_count(int);
      0, /* gkbar */
      0, /* gabar */
      0, /* gcabar */
-     0, /* gkcabar */
  }; 
  
  
@@ -345,14 +344,13 @@ static void nrn_alloc(Prop* _prop) {
      _nrn_mechanism_cache_instance _ml_real{_prop};
     auto* const _ml = &_ml_real;
     size_t const _iml{};
-    assert(_nrn_mechanism_get_num_vars(_prop) == 47);
+    assert(_nrn_mechanism_get_num_vars(_prop) == 46);
  	/*initialize range parameters*/
  	gnabar = _parm_default[0]; /* 0 */
  	gkbar = _parm_default[1]; /* 0 */
  	gabar = _parm_default[2]; /* 0 */
  	gcabar = _parm_default[3]; /* 0 */
- 	gkcabar = _parm_default[4]; /* 0 */
- 	 assert(_nrn_mechanism_get_num_vars(_prop) == 47);
+ 	 assert(_nrn_mechanism_get_num_vars(_prop) == 46);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_na_sym);
@@ -381,7 +379,7 @@ void _nrn_thread_table_reg(int, nrn_thread_table_check_t);
 extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
- extern "C" void _FCM_reg() {
+ extern "C" void _spike_Sikora_newunits_reg() {
 	int _vectorized = 0;
   _initlists();
  	ion_reg("na", -10000.);
@@ -403,49 +401,48 @@ extern void _cvode_abstol( Symbol**, double*, int);
                                        _nrn_mechanism_field<double>{"gkbar"} /* 1 */,
                                        _nrn_mechanism_field<double>{"gabar"} /* 2 */,
                                        _nrn_mechanism_field<double>{"gcabar"} /* 3 */,
-                                       _nrn_mechanism_field<double>{"gkcabar"} /* 4 */,
-                                       _nrn_mechanism_field<double>{"idrk"} /* 5 */,
-                                       _nrn_mechanism_field<double>{"iak"} /* 6 */,
-                                       _nrn_mechanism_field<double>{"icak"} /* 7 */,
-                                       _nrn_mechanism_field<double>{"m_inf"} /* 8 */,
-                                       _nrn_mechanism_field<double>{"h_inf"} /* 9 */,
-                                       _nrn_mechanism_field<double>{"n_inf"} /* 10 */,
-                                       _nrn_mechanism_field<double>{"p_inf"} /* 11 */,
-                                       _nrn_mechanism_field<double>{"q_inf"} /* 12 */,
-                                       _nrn_mechanism_field<double>{"c_inf"} /* 13 */,
-                                       _nrn_mechanism_field<double>{"tau_m"} /* 14 */,
-                                       _nrn_mechanism_field<double>{"tau_h"} /* 15 */,
-                                       _nrn_mechanism_field<double>{"tau_n"} /* 16 */,
-                                       _nrn_mechanism_field<double>{"tau_p"} /* 17 */,
-                                       _nrn_mechanism_field<double>{"tau_q"} /* 18 */,
-                                       _nrn_mechanism_field<double>{"tau_c"} /* 19 */,
-                                       _nrn_mechanism_field<double>{"m_exp"} /* 20 */,
-                                       _nrn_mechanism_field<double>{"h_exp"} /* 21 */,
-                                       _nrn_mechanism_field<double>{"n_exp"} /* 22 */,
-                                       _nrn_mechanism_field<double>{"p_exp"} /* 23 */,
-                                       _nrn_mechanism_field<double>{"q_exp"} /* 24 */,
-                                       _nrn_mechanism_field<double>{"c_exp"} /* 25 */,
-                                       _nrn_mechanism_field<double>{"m"} /* 26 */,
-                                       _nrn_mechanism_field<double>{"h"} /* 27 */,
-                                       _nrn_mechanism_field<double>{"n"} /* 28 */,
-                                       _nrn_mechanism_field<double>{"p"} /* 29 */,
-                                       _nrn_mechanism_field<double>{"q"} /* 30 */,
-                                       _nrn_mechanism_field<double>{"c"} /* 31 */,
-                                       _nrn_mechanism_field<double>{"ena"} /* 32 */,
-                                       _nrn_mechanism_field<double>{"ek"} /* 33 */,
-                                       _nrn_mechanism_field<double>{"eca"} /* 34 */,
-                                       _nrn_mechanism_field<double>{"cao"} /* 35 */,
-                                       _nrn_mechanism_field<double>{"cai"} /* 36 */,
-                                       _nrn_mechanism_field<double>{"Dm"} /* 37 */,
-                                       _nrn_mechanism_field<double>{"Dh"} /* 38 */,
-                                       _nrn_mechanism_field<double>{"Dn"} /* 39 */,
-                                       _nrn_mechanism_field<double>{"Dp"} /* 40 */,
-                                       _nrn_mechanism_field<double>{"Dq"} /* 41 */,
-                                       _nrn_mechanism_field<double>{"Dc"} /* 42 */,
-                                       _nrn_mechanism_field<double>{"ina"} /* 43 */,
-                                       _nrn_mechanism_field<double>{"ik"} /* 44 */,
-                                       _nrn_mechanism_field<double>{"ica"} /* 45 */,
-                                       _nrn_mechanism_field<double>{"_g"} /* 46 */,
+                                       _nrn_mechanism_field<double>{"idrk"} /* 4 */,
+                                       _nrn_mechanism_field<double>{"iak"} /* 5 */,
+                                       _nrn_mechanism_field<double>{"icak"} /* 6 */,
+                                       _nrn_mechanism_field<double>{"m_inf"} /* 7 */,
+                                       _nrn_mechanism_field<double>{"h_inf"} /* 8 */,
+                                       _nrn_mechanism_field<double>{"n_inf"} /* 9 */,
+                                       _nrn_mechanism_field<double>{"p_inf"} /* 10 */,
+                                       _nrn_mechanism_field<double>{"q_inf"} /* 11 */,
+                                       _nrn_mechanism_field<double>{"c_inf"} /* 12 */,
+                                       _nrn_mechanism_field<double>{"tau_m"} /* 13 */,
+                                       _nrn_mechanism_field<double>{"tau_h"} /* 14 */,
+                                       _nrn_mechanism_field<double>{"tau_n"} /* 15 */,
+                                       _nrn_mechanism_field<double>{"tau_p"} /* 16 */,
+                                       _nrn_mechanism_field<double>{"tau_q"} /* 17 */,
+                                       _nrn_mechanism_field<double>{"tau_c"} /* 18 */,
+                                       _nrn_mechanism_field<double>{"m_exp"} /* 19 */,
+                                       _nrn_mechanism_field<double>{"h_exp"} /* 20 */,
+                                       _nrn_mechanism_field<double>{"n_exp"} /* 21 */,
+                                       _nrn_mechanism_field<double>{"p_exp"} /* 22 */,
+                                       _nrn_mechanism_field<double>{"q_exp"} /* 23 */,
+                                       _nrn_mechanism_field<double>{"c_exp"} /* 24 */,
+                                       _nrn_mechanism_field<double>{"m"} /* 25 */,
+                                       _nrn_mechanism_field<double>{"h"} /* 26 */,
+                                       _nrn_mechanism_field<double>{"n"} /* 27 */,
+                                       _nrn_mechanism_field<double>{"p"} /* 28 */,
+                                       _nrn_mechanism_field<double>{"q"} /* 29 */,
+                                       _nrn_mechanism_field<double>{"c"} /* 30 */,
+                                       _nrn_mechanism_field<double>{"ena"} /* 31 */,
+                                       _nrn_mechanism_field<double>{"ek"} /* 32 */,
+                                       _nrn_mechanism_field<double>{"eca"} /* 33 */,
+                                       _nrn_mechanism_field<double>{"cao"} /* 34 */,
+                                       _nrn_mechanism_field<double>{"cai"} /* 35 */,
+                                       _nrn_mechanism_field<double>{"Dm"} /* 36 */,
+                                       _nrn_mechanism_field<double>{"Dh"} /* 37 */,
+                                       _nrn_mechanism_field<double>{"Dn"} /* 38 */,
+                                       _nrn_mechanism_field<double>{"Dp"} /* 39 */,
+                                       _nrn_mechanism_field<double>{"Dq"} /* 40 */,
+                                       _nrn_mechanism_field<double>{"Dc"} /* 41 */,
+                                       _nrn_mechanism_field<double>{"ina"} /* 42 */,
+                                       _nrn_mechanism_field<double>{"ik"} /* 43 */,
+                                       _nrn_mechanism_field<double>{"ica"} /* 44 */,
+                                       _nrn_mechanism_field<double>{"_g"} /* 45 */,
                                        _nrn_mechanism_field<double*>{"_ion_ena", "na_ion"} /* 0 */,
                                        _nrn_mechanism_field<double*>{"_ion_ina", "na_ion"} /* 1 */,
                                        _nrn_mechanism_field<double*>{"_ion_dinadv", "na_ion"} /* 2 */,
@@ -457,7 +454,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
                                        _nrn_mechanism_field<double*>{"_ion_cao", "ca_ion"} /* 8 */,
                                        _nrn_mechanism_field<double*>{"_ion_ica", "ca_ion"} /* 9 */,
                                        _nrn_mechanism_field<double*>{"_ion_dicadv", "ca_ion"} /* 10 */);
-  hoc_register_prop_size(_mechtype, 47, 11);
+  hoc_register_prop_size(_mechtype, 46, 11);
   hoc_register_dparam_semantics(_mechtype, 0, "na_ion");
   hoc_register_dparam_semantics(_mechtype, 1, "na_ion");
   hoc_register_dparam_semantics(_mechtype, 2, "na_ion");
@@ -472,7 +469,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_cvode(_mechtype, _ode_count, 0, 0, 0);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 FCM /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/FCM.mod\n");
+ 	ivoc_help("help ?1 FCM /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/spike_Sikora_newunits.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -626,7 +623,7 @@ static double _nrn_current(double _v){double _current=0.;v=_v;{ {
    ina = ( 1e-3 ) * gnabar * m * m * m * h * ( v - ena ) ;
    idrk = ( 1e-3 ) * gkbar * n * n * n * n * ( v - ek ) ;
    iak = ( 1e-3 ) * gabar * p * p * p * q * ( v - ek ) ;
-   icak = ( 1e-3 ) * gkcabar * ( ( cai / cadis ) / ( 1.0 + ( cai / cadis ) ) ) * ( v - ek ) ;
+   icak = ( 1e-3 ) * gkcbar * ( ( cai / cadis ) / ( 1.0 + ( cai / cadis ) ) ) * ( v - ek ) ;
    ik = idrk + iak + icak ;
    ica = ( 1e-3 ) * gcabar * c * c * c * ( v - eca ) ;
    }
@@ -707,7 +704,7 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
   cao = _ion_cao;
  { error =  states();
  if(error){
-  std_cerr_stream << "at line 77 in file FCM.mod:\n	SOLVE states\n";
+  std_cerr_stream << "at line 77 in file spike_Sikora_newunits.mod:\n	SOLVE states\n";
   std_cerr_stream << _ml << ' ' << _iml << '\n';
   abort_run(error);
 }
@@ -725,7 +722,7 @@ _first = 0;
 
 #if NMODL_TEXT
 static void register_nmodl_text_and_filename(int mech_type) {
-    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/FCM.mod";
+    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/spike_Sikora_newunits.mod";
     const char* nmodl_file_text = 
   "TITLE HH style channels for spiking retinal ganglion cells\n"
   ":\n"
@@ -742,7 +739,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "	USEION na READ ena WRITE ina\n"
   "	USEION k READ ek WRITE ik\n"
   "	USEION ca READ cai, eca, cao WRITE ica\n"
-  "	RANGE gnabar, gkbar, gabar, gcabar, gkcabar\n"
+  "	RANGE gnabar, gkbar, gabar, gcabar, gkcbar\n"
   "	RANGE m_inf, h_inf, n_inf, p_inf, q_inf, c_inf\n"
   "	RANGE tau_m, tau_h, tau_n, tau_p, tau_q, tau_c\n"
   "	RANGE m_exp, h_exp, n_exp, p_exp, q_exp, c_exp\n"
@@ -807,7 +804,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "	ina = (1e-3) *gnabar * m*m*m*h * (v - ena)\n"
   "    idrk = (1e-3) *gkbar * n*n*n*n * (v - ek)\n"
   "    iak =  (1e-3) *gabar * p*p*p*q * (v - ek)\n"
-  "    icak = (1e-3) *gkcabar * ((cai / cadis)/ (1 + (cai / cadis))) * (v - ek)\n"
+  "    icak = (1e-3) *gkcbar * ((cai / cadis)/ (1 + (cai / cadis))) * (v - ek)\n"
   "    ik = idrk + iak + icak\n"
   "	ica = (1e-3) *gcabar * c*c*c * (v - eca)\n"
   "\n"

@@ -505,12 +505,6 @@ static void initmodel(_internalthreadargsproto_) {
    hrates ( _threadargscomma_ v ) ;
    h = h_inf ;
    }
- {
-   mrates ( _threadargscomma_ v ) ;
-   hrates ( _threadargscomma_ v ) ;
-   m = m_inf ;
-   h = h_inf ;
-   }
  
 }
 }
@@ -682,17 +676,10 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "    	m_tau h_tau\n"
   "}\n"
   "\n"
-  "INITIAL { \n"
-  "	mrates(v)\n"
-  "	hrates(v)\n"
-  "\n"
-  "	m = m_inf\n"
-  "	h = h_inf\n"
-  "}\n"
   "\n"
   "BREAKPOINT {\n"
   "	SOLVE states METHOD cnexp\n"
-  "    	ica = (1e-3) * gcabar * m*m*h * (v-(0.32*eca+0.68*-58))\n"
+  "    ica = (1e-3) * gcabar * m*m*h * (v-(0.32*eca+0.68*-58))\n"
   "}\n"
   "\n"
   "DERIVATIVE states {\n"
