@@ -55,6 +55,14 @@ def plot_cell(cell):
         else:
             c = 'black'
         ax.plot(x, y, z, c=c, linewidth=2)
+
+    legend_elements = [
+        Line2D([0], [0], color='purple', lw=3, label='BC soma'),
+        Line2D([0], [0], color='orange', lw=3, label='BC dendrites'),
+        Line2D([0], [0], color='tomato', lw=3, label='BC axon'),
+        Line2D([0], [0], color='gold', lw=3, label='BC terminals'),
+    ]
+    ax.legend(handles=legend_elements, loc='upper left')
     ax.set_xlabel('X (µm)')
     ax.set_ylabel('Y (µm)')
     ax.set_zlabel('Z (µm)')
@@ -106,14 +114,18 @@ def plot_bc_rgc(bc, rgc):
         y = [sec.y3d(i) for i in range(sec.n3d())]
         z = [sec.z3d(i) for i in range(sec.n3d())]
 
-        if 'soma' in sec.name():
+        name = sec.name().split('.')[-1]   
+
+        if name == "soma":
             c = colors_rgc['soma']
-        elif 'dend' in sec.name():
+        elif name.startswith("dend"):
             c = colors_rgc['dend']
-        elif 'axon' in sec.name():
+        elif name in ("hill", "AISP", "AISD"):
+            c = colors_rgc['axon']   
+        elif name.startswith("axon"):
             c = colors_rgc['axon']
         else:
-            c = 'black'
+            c = "black"
 
         ax.plot(x, y, z, c=c, linewidth=2)
 

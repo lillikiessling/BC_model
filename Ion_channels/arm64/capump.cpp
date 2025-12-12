@@ -42,14 +42,14 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #endif
 #endif
  
-#define nrn_init _nrn_init__Bip_caconc
-#define _nrn_initial _nrn_initial__Bip_caconc
-#define nrn_cur _nrn_cur__Bip_caconc
-#define _nrn_current _nrn_current__Bip_caconc
-#define nrn_jacob _nrn_jacob__Bip_caconc
-#define nrn_state _nrn_state__Bip_caconc
-#define _net_receive _net_receive__Bip_caconc 
-#define state state__Bip_caconc 
+#define nrn_init _nrn_init__cad
+#define _nrn_initial _nrn_initial__cad
+#define nrn_cur _nrn_cur__cad
+#define _nrn_current _nrn_current__cad
+#define nrn_jacob _nrn_jacob__cad
+#define nrn_state _nrn_state__cad
+#define _net_receive _net_receive__cad 
+#define state state__cad 
  
 #define _threadargscomma_ _ml, _iml, _ppvar, _thread, _globals, _nt,
 #define _threadargsprotocomma_ Memb_list* _ml, size_t _iml, Datum* _ppvar, Datum* _thread, double* _globals, NrnThread* _nt,
@@ -112,7 +112,7 @@ static void register_nmodl_text_and_filename(int mechtype);
  static void _hoc_setdata();
  /* connect user functions to hoc names */
  static VoidFunc hoc_intfunc[] = {
- {"setdata_Bip_caconc", _hoc_setdata},
+ {"setdata_cad", _hoc_setdata},
  {0, 0}
 };
  
@@ -129,9 +129,9 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  {0, 0, 0}
 };
  static HocParmUnits _hoc_parm_units[] = {
- {"depth_Bip_caconc", "um"},
- {"taur_Bip_caconc", "ms"},
- {"cainf_Bip_caconc", "uM"},
+ {"depth_cad", "um"},
+ {"taur_cad", "ms"},
+ {"cainf_cad", "mM"},
  {0, 0}
 };
  static double cai0 = 0;
@@ -171,10 +171,10 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "7.7.0",
-"Bip_caconc",
- "depth_Bip_caconc",
- "taur_Bip_caconc",
- "cainf_Bip_caconc",
+"cad",
+ "depth_cad",
+ "taur_cad",
+ "cainf_cad",
  0,
  0,
  0,
@@ -185,7 +185,7 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  static _nrn_mechanism_std_vector<double> _parm_default{
      0.1, /* depth */
      1.5, /* taur */
-     0.1, /* cainf */
+     0.0001, /* cainf */
  }; 
  
  
@@ -202,7 +202,7 @@ static void nrn_alloc(Prop* _prop) {
  	/*initialize range parameters*/
  	depth = _parm_default[0]; /* 0.1 */
  	taur = _parm_default[1]; /* 1.5 */
- 	cainf = _parm_default[2]; /* 0.1 */
+ 	cainf = _parm_default[2]; /* 0.0001 */
  	 assert(_nrn_mechanism_get_num_vars(_prop) == 9);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
@@ -269,7 +269,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 Bip_caconc /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/capump.mod\n");
+ 	ivoc_help("help ?1 cad /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/capump.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -495,42 +495,41 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "\n"
   "NEURON {\n"
-  "	SUFFIX Bip_caconc\n"
+  "	THREADSAFE\n"
+  "	SUFFIX cad\n"
   "	USEION ca READ ica, cai WRITE cai\n"
   "	RANGE depth, cainf, taur\n"
   "}\n"
   "\n"
-  "\n"
-  "\n"
   "UNITS {\n"
-  "	(molar) =		(1/liter)	: moles do not appear in units\n"
-  "	(mM) 	=	 	(millimolar)\n"
-  "	(um) 	= 		(micron)\n"
-  "	(mA) 	= 		(milliamp)\n"
-  "	(msM) 	= 		(ms mM)\n"
+  "	(molar) =	(1/liter)	: moles do not appear in units\n"
+  "	(mM) =	 	(millimolar)\n"
+  "	(um) = 		(micron)\n"
+  "	(mA) = 		(milliamp)\n"
+  "	(msM) = 		(ms mM)\n"
   "}\n"
   "\n"
   "CONSTANT {\n"
-  "	FARADAY = 96489	(coul)			: moles do not appear in units\n"
+  "	FARADAY = 96489	(coul)		: moles do not appear in units\n"
   "}\n"
   "\n"
   "PARAMETER {\n"
-  "	depth 	= 	0.1	(um)		: depth of shell\n"
-  "	taur 	= 	1.5	(ms)		: remove first-order decay\n"
-  "	cainf 	= 	0.1	(uM)		\n"
+  "	depth = 	0.1	(um)		: depth of shell\n"
+  "	taur = 		1.5	(ms)		: remove first-order decay\n"
+  "	cainf = 	0.0001	(mM)\n"
   "}\n"
   "\n"
   "STATE {\n"
-  "	cai			(uM)\n"
+  "	cai		(mM) \n"
   "}\n"
   "\n"
   "INITIAL {\n"
-  "	cai 	= 	cainf\n"
+  "	cai = cainf\n"
   "}\n"
   "\n"
   "ASSIGNED {\n"
-  "	ica			        (mA/cm2)\n"
-  "	drive_channel		(uM/ms)\n"
+  "	ica		(mA/cm2)\n"
+  "	drive_channel	(mM/ms)\n"
   "}\n"
   "	\n"
   "BREAKPOINT {\n"
@@ -538,8 +537,8 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "}\n"
   "\n"
   "DERIVATIVE state { \n"
-  "	drive_channel = - (10000) * ica / (2 * FARADAY * depth)\n"
-  "	: if (drive_channel <= 0.) { drive_channel = 0. } : cannot pump below resting level\n"
+  "	drive_channel =  - (10000) * ica / (2 * FARADAY * depth)\n"
+  "	: if (drive_channel <= 0.) { drive_channel = 0. }	: cannot pump below resting level\n"
   "	cai' = drive_channel + (cainf-cai)/taur\n"
   "}\n"
   ;

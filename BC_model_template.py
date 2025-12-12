@@ -2,50 +2,6 @@ from neuron import h
 import numpy as np
 import matplotlib.pyplot as plt
 
-
-# Parameters and morphology based on:
-# ======= Ion Channel Types=======
-# HCN1: 'Bip_HCN1'
-# HCN2: 'Bip_HCN2'
-# HCN4: 'Bip_HCN4'
-# CaL : 'Bip_CaL'
-# CaT : 'Bip_CaT'
-# KCa: 'Bip_KCa' -> must come with 'Bip_caconc' 
-# Kir: 'Bip_Kir'
-# Kv: 'Bip_Kv'
-# Na: 'Bip_Na'
-
-
-# ======= Reversal Potentials =======
-# eh = -45 # mV
-# ek = -58 # mV
-# ena = 57.016 # mV
-# eca = eca (default neuron)
-
-
-# ======= Locations (from Thesis Havel Benav) =======
-# HCN1: term, soma
-# HCN2: term, soma
-# HCN4: term 
-# CaL : soma
-# CaT : soma
-# KCa: soma
-# Kir: soma
-# Kv: soma
-# Na: term, soma, dendrites
-
-
-# ======= Morphology (From Paul Werginz model) =======
-# dXdend = 5  # max. compartment length dendrite (um)
-# dXaxon = 2  # max. compartment length axon (um)
-# dXterm = 1  # max. compartment length terminals (um)
-# rhoA = 132  # intracellular (axial) resistivity (Ohm*cm)
-# cM = 1.14  # specific membrane capcitance (uF/cm2)
-# eL = -50  # Leak reversal potential (mV)
-# temp = 35  # temperature (Celsius)
-# glbar = 0.04166 # specific leak conductance (S/cm2)
-
-
 # ON-type Bipolar Cell model (using nrn/cells/BC_Euler9_ON morphology)
 class ONBipolarCell:
     """
@@ -55,7 +11,7 @@ class ONBipolarCell:
 
     def __init__(self, Stim=None):
         # ==== Constants ====
-        self.dXdend = 5.0   # µm
+        self.dXdend = 2.0   # µm
         self.dXaxon = 2.0   # µm
         self.dXterm = 1.0   # µm
         self.rhoA = 132.0   # Ohm*cm
@@ -74,6 +30,7 @@ class ONBipolarCell:
 
         # ==== Load morphology from hoc template ====
         self.cell = h.BC_Euler9_ON()
+        #self.cell = h.BC_rect()
         self.soma = self.cell.soma
         self.dendritic = self.cell.dendritic
         self.axonal = self.cell.axonal
@@ -138,26 +95,27 @@ class ONBipolarCell:
         sec = self.soma
         sec.insert("Bip_HCN1")
         sec.insert("Bip_HCN2")
-        sec.insert("Bip_CaL")
         sec.insert("Bip_CaT")
-        sec.insert("Bip_caconc")
+        #sec.insert("Bip_caconc")
+        sec.insert("cad")
         sec.insert("Bip_KCa")
         sec.insert("Bip_Kir")
         sec.insert("Bip_Kv")
-        sec.insert("Bip_Na")
         sec.eh = self.eh
         sec.ek = self.ek
-        sec.ena = self.ena
 
         # --- dendrites ---
         for sec in self.dendritic:
             sec.insert("Bip_Na")
+            #sec.insert("Bip_caconc")
+            sec.insert("cad")
             sec.ena = self.ena
 
         # --- axon ---
         for sec in self.axonal:
-            sec.insert("Bip_Na")
-            sec.ena = self.ena
+            sec.insert("Bip_HCN4")
+            #sec.insert("Bip_caconc")
+            sec.insert("cad")
 
         # --- terminals ---
         for sec in self.terminal:
@@ -165,6 +123,9 @@ class ONBipolarCell:
             sec.insert("Bip_HCN2")
             sec.insert("Bip_HCN4")
             sec.insert("Bip_Na")
+            sec.insert("Bip_CaL")
+            #sec.insert("Bip_caconc")
+            sec.insert("cad")
             sec.eh = self.eh
             sec.ena = self.ena
 

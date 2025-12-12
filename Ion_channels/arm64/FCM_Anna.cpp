@@ -42,18 +42,18 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #endif
 #endif
  
-#define nrn_init _nrn_init__FCM_Anna
-#define _nrn_initial _nrn_initial__FCM_Anna
-#define nrn_cur _nrn_cur__FCM_Anna
-#define _nrn_current _nrn_current__FCM_Anna
-#define nrn_jacob _nrn_jacob__FCM_Anna
-#define nrn_state _nrn_state__FCM_Anna
-#define _net_receive _net_receive__FCM_Anna 
-#define crates crates__FCM_Anna 
-#define hrates hrates__FCM_Anna 
-#define mrates mrates__FCM_Anna 
-#define nrates nrates__FCM_Anna 
-#define states states__FCM_Anna 
+#define nrn_init _nrn_init__FCM
+#define _nrn_initial _nrn_initial__FCM
+#define nrn_cur _nrn_cur__FCM
+#define _nrn_current _nrn_current__FCM
+#define nrn_jacob _nrn_jacob__FCM
+#define nrn_state _nrn_state__FCM
+#define _net_receive _net_receive__FCM 
+#define crates crates__FCM 
+#define hrates hrates__FCM 
+#define mrates mrates__FCM 
+#define nrates nrates__FCM 
+#define states states__FCM 
  
 #define _threadargscomma_ _ml, _iml, _ppvar, _thread, _globals, _nt,
 #define _threadargsprotocomma_ Memb_list* _ml, size_t _iml, Datum* _ppvar, Datum* _thread, double* _globals, NrnThread* _nt,
@@ -177,11 +177,11 @@ static void register_nmodl_text_and_filename(int mechtype);
  static void _hoc_setdata();
  /* connect user functions to hoc names */
  static VoidFunc hoc_intfunc[] = {
- {"setdata_FCM_Anna", _hoc_setdata},
- {"crates_FCM_Anna", _hoc_crates},
- {"hrates_FCM_Anna", _hoc_hrates},
- {"mrates_FCM_Anna", _hoc_mrates},
- {"nrates_FCM_Anna", _hoc_nrates},
+ {"setdata_FCM", _hoc_setdata},
+ {"crates_FCM", _hoc_crates},
+ {"hrates_FCM", _hoc_hrates},
+ {"mrates_FCM", _hoc_mrates},
+ {"nrates_FCM", _hoc_nrates},
  {0, 0}
 };
  
@@ -201,22 +201,22 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  /* declare global and static user variables */
  #define gind 0
  #define _gth 0
-#define cadis cadis_FCM_Anna
+#define cadis cadis_FCM
  double cadis = 0.001;
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  {0, 0, 0}
 };
  static HocParmUnits _hoc_parm_units[] = {
- {"cadis_FCM_Anna", "mM"},
- {"gnabar_FCM_Anna", "mS/cm2"},
- {"gkbar_FCM_Anna", "mS/cm2"},
- {"gcabar_FCM_Anna", "mS/cm2"},
- {"gkcabar_FCM_Anna", "mS/cm2"},
- {"ina_FCM_Anna", "mA/cm2"},
- {"ik_FCM_Anna", "mA/cm2"},
- {"ik__FCM_Anna", "mA/cm2"},
- {"ikca_FCM_Anna", "mA/cm2"},
+ {"cadis_FCM", "mM"},
+ {"gnabar_FCM", "mS/cm2"},
+ {"gkbar_FCM", "mS/cm2"},
+ {"gcabar_FCM", "mS/cm2"},
+ {"gkcabar_FCM", "mS/cm2"},
+ {"ina_FCM", "mA/cm2"},
+ {"ik_FCM", "mA/cm2"},
+ {"ik__FCM", "mA/cm2"},
+ {"ikca_FCM", "mA/cm2"},
  {0, 0}
 };
  static double c0 = 0;
@@ -226,7 +226,7 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  static double n0 = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
- {"cadis_FCM_Anna", &cadis_FCM_Anna},
+ {"cadis_FCM", &cadis_FCM},
  {0, 0}
 };
  static DoubVec hoc_vdoub[] = {
@@ -260,29 +260,29 @@ static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, 
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
  "7.7.0",
-"FCM_Anna",
- "gnabar_FCM_Anna",
- "gkbar_FCM_Anna",
- "gcabar_FCM_Anna",
- "gkcabar_FCM_Anna",
+"FCM",
+ "gnabar_FCM",
+ "gkbar_FCM",
+ "gcabar_FCM",
+ "gkcabar_FCM",
  0,
- "ina_FCM_Anna",
- "ik_FCM_Anna",
- "ik__FCM_Anna",
- "ikca_FCM_Anna",
- "m_inf_FCM_Anna",
- "h_inf_FCM_Anna",
- "n_inf_FCM_Anna",
- "c_inf_FCM_Anna",
- "m_tau_FCM_Anna",
- "h_tau_FCM_Anna",
- "n_tau_FCM_Anna",
- "c_tau_FCM_Anna",
+ "ina_FCM",
+ "ik_FCM",
+ "ik__FCM",
+ "ikca_FCM",
+ "m_inf_FCM",
+ "h_inf_FCM",
+ "n_inf_FCM",
+ "c_inf_FCM",
+ "m_tau_FCM",
+ "h_tau_FCM",
+ "n_tau_FCM",
+ "c_tau_FCM",
  0,
- "m_FCM_Anna",
- "h_FCM_Anna",
- "n_FCM_Anna",
- "c_FCM_Anna",
+ "m_FCM",
+ "h_FCM",
+ "n_FCM",
+ "c_FCM",
  0,
  0};
  static Symbol* _na_sym;
@@ -426,7 +426,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 FCM_Anna /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/FCM_Anna.mod\n");
+ 	ivoc_help("help ?1 FCM /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/FCM_Anna.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -498,7 +498,7 @@ static void _hoc_mrates(void) {
  Datum* _ppvar; Datum* _thread; NrnThread* _nt;
  
   if(!_prop_id) {
-    hoc_execerror("No data for mrates_FCM_Anna. Requires prior call to setdata_FCM_Anna and that the specified mechanism instance still be in existence.", NULL);
+    hoc_execerror("No data for mrates_FCM. Requires prior call to setdata_FCM and that the specified mechanism instance still be in existence.", NULL);
   }
   Prop* _local_prop = _extcall_prop;
   _nrn_mechanism_cache_instance _ml_real{_local_prop};
@@ -543,7 +543,7 @@ static void _hoc_hrates(void) {
  Datum* _ppvar; Datum* _thread; NrnThread* _nt;
  
   if(!_prop_id) {
-    hoc_execerror("No data for hrates_FCM_Anna. Requires prior call to setdata_FCM_Anna and that the specified mechanism instance still be in existence.", NULL);
+    hoc_execerror("No data for hrates_FCM. Requires prior call to setdata_FCM and that the specified mechanism instance still be in existence.", NULL);
   }
   Prop* _local_prop = _extcall_prop;
   _nrn_mechanism_cache_instance _ml_real{_local_prop};
@@ -588,7 +588,7 @@ static void _hoc_nrates(void) {
  Datum* _ppvar; Datum* _thread; NrnThread* _nt;
  
   if(!_prop_id) {
-    hoc_execerror("No data for nrates_FCM_Anna. Requires prior call to setdata_FCM_Anna and that the specified mechanism instance still be in existence.", NULL);
+    hoc_execerror("No data for nrates_FCM. Requires prior call to setdata_FCM and that the specified mechanism instance still be in existence.", NULL);
   }
   Prop* _local_prop = _extcall_prop;
   _nrn_mechanism_cache_instance _ml_real{_local_prop};
@@ -633,7 +633,7 @@ static void _hoc_crates(void) {
  Datum* _ppvar; Datum* _thread; NrnThread* _nt;
  
   if(!_prop_id) {
-    hoc_execerror("No data for crates_FCM_Anna. Requires prior call to setdata_FCM_Anna and that the specified mechanism instance still be in existence.", NULL);
+    hoc_execerror("No data for crates_FCM. Requires prior call to setdata_FCM and that the specified mechanism instance still be in existence.", NULL);
   }
   Prop* _local_prop = _extcall_prop;
   _nrn_mechanism_cache_instance _ml_real{_local_prop};
@@ -913,7 +913,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "NEURON {\n"
   "	THREADSAFE\n"
-  "    	SUFFIX FCM_Anna\n"
+  "    	SUFFIX FCM\n"
   "    	USEION na READ ena WRITE ina\n"
   "    	USEION k READ ek WRITE ik\n"
   "    	USEION ca READ cai, eca, cao WRITE ica\n"

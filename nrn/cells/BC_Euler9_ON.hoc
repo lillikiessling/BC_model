@@ -34,7 +34,7 @@ proc topol() {
 	connect term[5](0), axon[11](1) 
 	connect term[6](0), axon[12](1) 
 
-	connect dend[0](0), soma(0.5) 
+	connect dend[0](0), soma(0.5)
 	connect dend[1](0), dend[0](1) 
 	connect dend[2](0), dend[1](1) 
 	connect dend[3](0), dend[2](1) 
@@ -53,8 +53,9 @@ proc shape3d_1() {
 		pt3dadd(0, 0, 0, 10.96) 
 		pt3dadd(0, 0, -5.48, 10.96) 
 	}
-	axon { pt3dclear()
+	axon[0] { pt3dclear()
 		pt3dstyle(1, 0, 0, 0)
+		pt3dadd(0, 0, 5.48, 1.54) 
 		pt3dadd(-2.30, -0.88, 9.23, 1.54) 
 		pt3dadd(-3.29, -0.66, 12.37, 1.54) 
 		pt3dadd(-4.28, -0.44, 15.51, 1.54) 
@@ -146,7 +147,7 @@ proc shape3d_1() {
 		pt3dadd(-0.22, -7.57, 67.11, 1.32) 
 	}
 
-	term { pt3dclear() 
+	term[0] { pt3dclear() 
 		pt3dadd(-18.53, -1.54, 69.52, 2.20) 
 		pt3dadd(-19.63, -0.44, 70.07, 2.20) 
 	}
@@ -175,8 +176,9 @@ proc shape3d_1() {
 		pt3dadd(-0.22, -9.54, 67.11, 2.20) 
 	}
 
-	dend { pt3dclear() 
+	dend[0] { pt3dclear() 
 		pt3dstyle(1, 0, 0, 0)
+		pt3dadd(0, 0, -5.48, 1.10) 
 		pt3dadd(-4.00, 2.30, -3.85, 1.10) 
 		pt3dadd(-4.02, 0.99, -3.85, 1.10) 
 	}

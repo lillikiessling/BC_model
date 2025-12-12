@@ -5,42 +5,41 @@ TITLE decay of submembrane calcium concentration
 
 
 NEURON {
-	SUFFIX Bip_caconc
+	THREADSAFE
+	SUFFIX cad
 	USEION ca READ ica, cai WRITE cai
 	RANGE depth, cainf, taur
 }
 
-
-
 UNITS {
-	(molar) =		(1/liter)	: moles do not appear in units
-	(mM) 	=	 	(millimolar)
-	(um) 	= 		(micron)
-	(mA) 	= 		(milliamp)
-	(msM) 	= 		(ms mM)
+	(molar) =	(1/liter)	: moles do not appear in units
+	(mM) =	 	(millimolar)
+	(um) = 		(micron)
+	(mA) = 		(milliamp)
+	(msM) = 		(ms mM)
 }
 
 CONSTANT {
-	FARADAY = 96489	(coul)			: moles do not appear in units
+	FARADAY = 96489	(coul)		: moles do not appear in units
 }
 
 PARAMETER {
-	depth 	= 	0.1	(um)		: depth of shell
-	taur 	= 	1.5	(ms)		: remove first-order decay
-	cainf 	= 	0.1	(uM)		
+	depth = 	0.1	(um)		: depth of shell
+	taur = 		1.5	(ms)		: remove first-order decay
+	cainf = 	0.0001	(mM)
 }
 
 STATE {
-	cai			(uM)
+	cai		(mM) 
 }
 
 INITIAL {
-	cai 	= 	cainf
+	cai = cainf
 }
 
 ASSIGNED {
-	ica			        (mA/cm2)
-	drive_channel		(uM/ms)
+	ica		(mA/cm2)
+	drive_channel	(mM/ms)
 }
 	
 BREAKPOINT {
@@ -48,7 +47,7 @@ BREAKPOINT {
 }
 
 DERIVATIVE state { 
-	drive_channel = - (10000) * ica / (2 * FARADAY * depth)
-	: if (drive_channel <= 0.) { drive_channel = 0. } : cannot pump below resting level
+	drive_channel =  - (10000) * ica / (2 * FARADAY * depth)
+	: if (drive_channel <= 0.) { drive_channel = 0. }	: cannot pump below resting level
 	cai' = drive_channel + (cainf-cai)/taur
 }

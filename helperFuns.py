@@ -118,3 +118,18 @@ def compSectCenters(section):
     dint.interpolate(rint,ll,dd)
 
     return rint,xint,yint,zint,dint
+
+def move_rgc_along_z(self, distance):
+    """Move RGC along z-axis by specified distance (µm)."""
+    # The line 'self.z += distance' is the cause of the error.
+    # It should be removed as the HocObject does not have a 'z' attribute.
+    
+    for sec in self.all:
+        for i in range(sec.n3d()):
+            sec.pt3dchange(
+                i,
+                sec.x3d(i),
+                sec.y3d(i),
+                sec.z3d(i) + distance, # The movement happens here
+                sec.diam3d(i)
+            )

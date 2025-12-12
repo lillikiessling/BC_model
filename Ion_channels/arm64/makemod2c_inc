@@ -86,43 +86,11 @@ FCM.cpp: ../FCM.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
 	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
-FCM_Anna.cpp: ../FCM_Anna.mod $(NOCMODL)
-	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "FCM_Anna.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
-
-./FCM_Anna.o: FCM_Anna.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
-
-cad_Sikora.cpp: ../cad_Sikora.mod $(NOCMODL)
-	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cad_Sikora.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
-
-./cad_Sikora.o: cad_Sikora.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
-
-cad_Sikora_newunits.cpp: ../cad_Sikora_newunits.mod $(NOCMODL)
-	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cad_Sikora_newunits.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
-
-./cad_Sikora_newunits.o: cad_Sikora_newunits.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
-
 capump.cpp: ../capump.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
 	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "capump.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./capump.o: capump.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
-
-capump_Anna.cpp: ../capump_Anna.mod $(NOCMODL)
-	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "capump_Anna.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
-
-./capump_Anna.o: capump_Anna.cpp
 	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
 	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
@@ -166,14 +134,6 @@ ribbon_tiger_simple.cpp: ../ribbon_tiger_simple.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
 	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
-ribbon_tiger_simple_newunits.cpp: ../ribbon_tiger_simple_newunits.mod $(NOCMODL)
-	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ribbon_tiger_simple_newunits.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
-
-./ribbon_tiger_simple_newunits.o: ribbon_tiger_simple_newunits.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
-
 spike_Sikora.cpp: ../spike_Sikora.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
 	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "spike_Sikora.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
@@ -187,14 +147,6 @@ tsbp_Sikora.cpp: ../tsbp_Sikora.mod $(NOCMODL)
 	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "tsbp_Sikora.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./tsbp_Sikora.o: tsbp_Sikora.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
-
-tsbp_Sikora_newunits.cpp: ../tsbp_Sikora_newunits.mod $(NOCMODL)
-	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "tsbp_Sikora_newunits.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
-
-./tsbp_Sikora_newunits.o: tsbp_Sikora_newunits.cpp
 	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
 	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 

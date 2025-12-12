@@ -1,149 +1,128 @@
 TITLE HH style channels for spiking retinal ganglion cells
 :
-: Modified from Fohlmeister et al, 1990, Brain Res 510, 343-345
-: by TJ Velte March 17, 1995
+: Modified from Fohlmeister et al., 2010
 : must be used with calcium pump mechanism, i.e. capump.mod
-:
-:
+
 
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
 NEURON {
-	SUFFIX FCM
-	USEION na READ ena WRITE ina
-	USEION k READ ek WRITE ik
-	USEION ca READ cai, eca, cao WRITE ica
-	RANGE gnabar, gkbar, gabar, gcabar, gkcabar
-	RANGE m_inf, h_inf, n_inf, p_inf, q_inf, c_inf
-	RANGE tau_m, tau_h, tau_n, tau_p, tau_q, tau_c
-	RANGE m_exp, h_exp, n_exp, p_exp, q_exp, c_exp
-        RANGE idrk, iak, icak
-
+	THREADSAFE
+    	SUFFIX FCM
+    	USEION na READ ena WRITE ina
+    	USEION k READ ek WRITE ik
+    	USEION ca READ cai, eca, cao WRITE ica
+    	RANGE gnabar, gkbar, gcabar, gkcabar
+    	RANGE m_inf, h_inf, n_inf, c_inf
+    	RANGE m_tau, h_tau, n_tau, c_tau
+    	RANGE ik, ik_, ikca
+	RANGE ina
 }
 
-
 UNITS {
-	(molar) = (1/liter)
-	(mM) = (millimolar)
-	(mA) = (milliamp)
-	(mV) = (millivolt)
+    	(molar) = 	(1/liter)
+    	(mM) = 		(millimolar)
+    	(mA) = 		(milliamp)
+    	(mV) = 		(millivolt)
+		(mS) = 		(millisiemens)
 
 }
 
 PARAMETER {
-	gnabar		(mS/cm2)
-	gkbar		(mS/cm2)
-	gabar		(mS/cm2)
-	gcabar		(mS/cm2)
-	gkcabar		(mS/cm2)
-	ena			(mV)
-	ek 			(mV)
-	eca			(mV)
-	cao=1.8		(mM)
-	cai=0.0001	(mM)
-	cadis=0.001	(mM)
-	dt         	(ms)
-	v           (mV)
-
+    	gnabar		(mS/cm2)
+    	gkbar 		(mS/cm2)
+    	gcabar   	(mS/cm2)
+    	gkcabar 	(mS/cm2)
+    	ena				(mV)
+    	ek	  			(mV)
+    	eca          	(mV)
+    	cao = 1.8 		(mM)
+    	cai = 0.0001 	(mM)
+		cadis = 0.001	(mM)
+    	dt           	(ms)
+    	v            	(mV)
 }
 
-STATE {
-	m h n p q c 
-}
+STATE { m h n c }
 
 INITIAL {
-        m = 0.0345
-        h = 0.8594
-        n = 0.1213
-        p = 0.0862
-        q = 0.2534
-        c = 0.0038
+	mrates(v)
+	m = m_inf
+	hrates(v)
+	h = h_inf
+	nrates(v)
+	n = n_inf
+	crates(v)
+	c = c_inf
 }
 
 ASSIGNED {
-	ina		(mA/cm2)
-	ik		(mA/cm2)
-    idrk    (mA/cm2)
-    iak     (mA/cm2)
-    icak    (mA/cm2)
-	ica	(mA/cm2)
-	m_inf h_inf n_inf p_inf q_inf c_inf
-	tau_m tau_h tau_n tau_p tau_q tau_c
-	m_exp h_exp n_exp p_exp q_exp c_exp
+	ina     	(mA/cm2)
+    ik     		(mA/cm2)
+	ik_    		(mA/cm2)
+    ikca   		(mA/cm2)
+    ica    		(mA/cm2)
+    m_inf h_inf n_inf c_inf
+    m_tau h_tau n_tau c_tau
+}
 
+INITIAL { 
+	mrates(v)
+	hrates(v)
+	nrates(v)
+	crates(v)
+
+	m = m_inf
+	h = h_inf
+	n = n_inf
+	c = c_inf
 }
 
 BREAKPOINT {
-	SOLVE states
-	ina = (1e-3) *gnabar * m*m*m*h * (v - ena)
-    idrk = (1e-3) *gkbar * n*n*n*n * (v - ek)
-    iak =  (1e-3) *gabar * p*p*p*q * (v - ek)
-    icak = (1e-3) *gkcabar * ((cai / cadis)/ (1 + (cai / cadis))) * (v - ek)
-    ik = idrk + iak + icak
-	ica = (1e-3) *gcabar * c*c*c * (v - eca)
-
+	SOLVE states METHOD cnexp
+    	ina = (1e-3) * gnabar * m*m*m*h * (v-ena)
+    	ik_ = (1e-3) * gkbar * n*n*n*n * (v-ek)
+    	ikca = (1e-3) * gkcabar * ((cai/cadis) / (1+(cai/cadis))) * (v-ek)
+		ik = ik_ + ikca
+    	ica = (1e-3) * gcabar * c*c*c * (v-eca)
 }
 
-PROCEDURE states() {	: exact when v held constant
-	evaluate_fct(v)
-	m = m + m_exp * (m_inf - m)
-	h = h + h_exp * (h_inf - h)
-	n = n + n_exp * (n_inf - n)
-	p = p + p_exp * (p_inf - p)
-	q = q + q_exp * (q_inf - q)
-	c = c + c_exp * (c_inf - c)
+DERIVATIVE states {
+    mrates(v)
+	hrates(v)
+	nrates(v)
+	crates(v)
 
-	VERBATIM
-	return 0;
-	ENDVERBATIM
-
+	m' = (m_inf-m)/m_tau
+        h' = (h_inf-h)/h_tau
+	n' = (n_inf-n)/n_tau
+	c' = (c_inf-c)/c_tau
 }
 
-UNITSOFF
-
-PROCEDURE evaluate_fct(v(mV)) { LOCAL a,b
-	
-:NA m
-	a = (-0.6 * (v+30)) / ((exp(-0.1*(v+30))) - 1)
-	b = 20 * (exp((-1*(v+55))/18))
-	tau_m = 1 / (a + b)
-	m_inf = a * tau_m
-
-:NA h
-	a = 0.4 * (exp((-1*(v+50))/20))
-	b = 6 / ( 1 + exp(-0.1 *(v+20)))
-	tau_h = 1 / (a + b)
-	h_inf = a * tau_h
-
-:K n (non-inactivating, delayed rectifier)
-	a = (-0.02 * (v+40)) / ((exp(-0.1*(v+40))) - 1)
-	b = 0.4 * (exp((-1*(v + 50))/80))
-	tau_n = 1 / (a + b)
-	n_inf = a * tau_n
-
-:K (inactivating)
-	a = (-0.006 * (v+90)) / ((exp(-0.1*(v+90))) - 1)
-	b = 0.1 * (exp((-1*(v + 30))/10))
-	tau_p = 1 / (a + b)
-	p_inf = a * tau_p
-
-	a = 0.04 * (exp((-1*(v+70))/20))
-	b = 0.6 / ( 1 + exp(-0.1 *(v+40)))	
-	tau_q = 1 / (a + b)
-	q_inf = a * tau_q
-
-:CA channel
-	a = (-0.3 * (v+13)) / ((exp(-0.1*(v+13))) - 1)
-	b = 10 * (exp((-1*(v + 38))/18))
-	tau_c = 1 / (a + b)
-	c_inf = a * tau_c
-
-: State vars to inifinity
-	m_exp = 1 - exp(-dt/tau_m)
-	h_exp = 1 - exp(-dt/tau_h)
-	n_exp = 1 - exp(-dt/tau_n)
-	p_exp = 1 - exp(-dt/tau_p)
-	q_exp = 1 - exp(-dt/tau_q)
-	c_exp = 1 - exp(-dt/tau_c)
+PROCEDURE mrates(v) { LOCAL a,b
+	a = (-2.725*(v+35)) / (exp(-0.1*(v+35))-1)
+	b = 90.83 * exp(-(v+60)/20)
+	m_tau = 1 / (a+b)
+	m_inf = a * m_tau
 }
-UNITSON
+
+PROCEDURE hrates(v) { LOCAL a,b
+	a = 1.817 * exp(-(v+52)/20)
+	b = 27.25 / (exp(-0.1*(v+22))+1)
+	h_tau = 1 / (a+b)
+	h_inf = a * h_tau
+}
+
+PROCEDURE nrates(v) { LOCAL a,b
+	a = (-0.09575*(v+37)) / ((exp(-0.1*(v+37))-1))
+	b = 1.915 * exp(-(v+47)/80)
+	n_tau = 1 / (a+b)
+	n_inf = a * n_tau
+}
+
+PROCEDURE crates(v) { LOCAL a,b
+	a = (-1.362*(v+13)) / (exp(-0.1*(v+13))-1)
+	b = 45.41 * exp(-(v+38)/18)
+	c_tau = 1 / (a+b)
+	c_inf = a * c_tau
+}
