@@ -14,14 +14,13 @@ extern "C" void _Bip_Kir_reg(void);
 extern "C" void _Bip_Kv_reg(void);
 extern "C" void _Bip_Na_reg(void);
 extern "C" void _FCM_reg(void);
+extern "C" void _Sikora_cas_reg(void);
+extern "C" void _Sikora_ribbon_tiger_reg(void);
+extern "C" void _Sikora_spike_reg(void);
+extern "C" void _Sikora_tsbp_reg(void);
 extern "C" void _capump_reg(void);
-extern "C" void _cas_Sikora_reg(void);
 extern "C" void _modulate_reg(void);
-extern "C" void _ribbon_synapse_reg(void);
-extern "C" void _ribbon_tiger_Sikora_reg(void);
-extern "C" void _ribbon_tiger_simple_reg(void);
-extern "C" void _spike_Sikora_reg(void);
-extern "C" void _tsbp_Sikora_reg(void);
+extern "C" void _ribbon_tiger_reg(void);
 extern "C" void _xtra_reg(void);
 
 extern "C" void modl_reg() {
@@ -38,14 +37,13 @@ extern "C" void modl_reg() {
     fprintf(stderr, " \"Bip_Kv.mod\"");
     fprintf(stderr, " \"Bip_Na.mod\"");
     fprintf(stderr, " \"FCM.mod\"");
+    fprintf(stderr, " \"Sikora_cas.mod\"");
+    fprintf(stderr, " \"Sikora_ribbon_tiger.mod\"");
+    fprintf(stderr, " \"Sikora_spike.mod\"");
+    fprintf(stderr, " \"Sikora_tsbp.mod\"");
     fprintf(stderr, " \"capump.mod\"");
-    fprintf(stderr, " \"cas_Sikora.mod\"");
     fprintf(stderr, " \"modulate.mod\"");
-    fprintf(stderr, " \"ribbon_synapse.mod\"");
-    fprintf(stderr, " \"ribbon_tiger_Sikora.mod\"");
-    fprintf(stderr, " \"ribbon_tiger_simple.mod\"");
-    fprintf(stderr, " \"spike_Sikora.mod\"");
-    fprintf(stderr, " \"tsbp_Sikora.mod\"");
+    fprintf(stderr, " \"ribbon_tiger.mod\"");
     fprintf(stderr, " \"xtra.mod\"");
     fprintf(stderr, "\n");
   }
@@ -60,13 +58,12 @@ extern "C" void modl_reg() {
   _Bip_Kv_reg();
   _Bip_Na_reg();
   _FCM_reg();
+  _Sikora_cas_reg();
+  _Sikora_ribbon_tiger_reg();
+  _Sikora_spike_reg();
+  _Sikora_tsbp_reg();
   _capump_reg();
-  _cas_Sikora_reg();
   _modulate_reg();
-  _ribbon_synapse_reg();
-  _ribbon_tiger_Sikora_reg();
-  _ribbon_tiger_simple_reg();
-  _spike_Sikora_reg();
-  _tsbp_Sikora_reg();
+  _ribbon_tiger_reg();
   _xtra_reg();
 }

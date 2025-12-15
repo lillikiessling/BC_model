@@ -14,9 +14,8 @@ class ONBipolarCell:
         self.dXdend = 2.0   # µm
         self.dXaxon = 2.0   # µm
         self.dXterm = 1.0   # µm
-        self.rhoA = 132.0   # Ohm*cm
-        self.cM = 1.14      # µF/cm2
-        self.eL = -50.0     # mV
+        self.rhoA = 130.0   # Ohm*cm
+        self.cM = 1.1       # µF/cm2
         self.glbar = 0.04166  # S/cm2
         self.temp = 35.0     # °C
 
@@ -24,6 +23,7 @@ class ONBipolarCell:
         self.eh = -45.0
         self.ek = -58.0
         self.ena = 57.016
+        self.eL = -41    # mV
 
         # temperature
         h.celsius = self.temp

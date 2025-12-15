@@ -2070,7 +2070,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "Log-Normal evaluation for glutamate profile\n"
   "ENDCOMMENT\n"
   "\n"
-  "DEFINE NumSites 10 : The number of Release Sites per Synapse\n"
+  "DEFINE NumSites 10: The number of Release Sites per Synapse\n"
   "\n"
   "INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}\n"
   "\n"

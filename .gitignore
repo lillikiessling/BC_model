@@ -21,3 +21,6 @@ test1.ipynb
 # NEURON compiled files
 nrn/
 RGC_model_Anna/
+
+
+Ion_channels/arm64/

@@ -7,7 +7,7 @@ Ribbon Synapse with inline calculations rather than function calls from BREAKPOI
 Log-Normal evaluation for glutamate profile
 ENDCOMMENT
 
-DEFINE NumSites 10 : The number of Release Sites per Synapse
+DEFINE NumSites 10: The number of Release Sites per Synapse
 
 INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 
