@@ -18,10 +18,10 @@ extern "C" void _Sikora_cas_reg(void);
 extern "C" void _Sikora_ribbon_tiger_reg(void);
 extern "C" void _Sikora_spike_reg(void);
 extern "C" void _Sikora_tsbp_reg(void);
+extern "C" void _Xtra_reg(void);
 extern "C" void _capump_reg(void);
 extern "C" void _modulate_reg(void);
 extern "C" void _ribbon_tiger_reg(void);
-extern "C" void _xtra_reg(void);
 
 extern "C" void modl_reg() {
   if (!nrn_nobanner_) if (nrnmpi_myid < 1) {
@@ -41,10 +41,10 @@ extern "C" void modl_reg() {
     fprintf(stderr, " \"Sikora_ribbon_tiger.mod\"");
     fprintf(stderr, " \"Sikora_spike.mod\"");
     fprintf(stderr, " \"Sikora_tsbp.mod\"");
+    fprintf(stderr, " \"Xtra.mod\"");
     fprintf(stderr, " \"capump.mod\"");
     fprintf(stderr, " \"modulate.mod\"");
     fprintf(stderr, " \"ribbon_tiger.mod\"");
-    fprintf(stderr, " \"xtra.mod\"");
     fprintf(stderr, "\n");
   }
   _BiP_HCN4_reg();
@@ -62,8 +62,8 @@ extern "C" void modl_reg() {
   _Sikora_ribbon_tiger_reg();
   _Sikora_spike_reg();
   _Sikora_tsbp_reg();
+  _Xtra_reg();
   _capump_reg();
   _modulate_reg();
   _ribbon_tiger_reg();
-  _xtra_reg();
 }

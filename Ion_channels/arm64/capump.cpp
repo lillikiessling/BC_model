@@ -71,12 +71,12 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #define taur_columnindex 1
 #define cainf _ml->template fpfield<2>(_iml)
 #define cainf_columnindex 2
-#define cai _ml->template fpfield<3>(_iml)
-#define cai_columnindex 3
-#define Dcai _ml->template fpfield<4>(_iml)
-#define Dcai_columnindex 4
-#define ica _ml->template fpfield<5>(_iml)
-#define ica_columnindex 5
+#define ica _ml->template fpfield<3>(_iml)
+#define ica_columnindex 3
+#define cai _ml->template fpfield<4>(_iml)
+#define cai_columnindex 4
+#define Dcai _ml->template fpfield<5>(_iml)
+#define Dcai_columnindex 5
 #define drive_channel _ml->template fpfield<6>(_iml)
 #define drive_channel_columnindex 6
 #define v _ml->template fpfield<7>(_iml)
@@ -245,9 +245,9 @@ extern void _cvode_abstol( Symbol**, double*, int);
                                        _nrn_mechanism_field<double>{"depth"} /* 0 */,
                                        _nrn_mechanism_field<double>{"taur"} /* 1 */,
                                        _nrn_mechanism_field<double>{"cainf"} /* 2 */,
-                                       _nrn_mechanism_field<double>{"cai"} /* 3 */,
-                                       _nrn_mechanism_field<double>{"Dcai"} /* 4 */,
-                                       _nrn_mechanism_field<double>{"ica"} /* 5 */,
+                                       _nrn_mechanism_field<double>{"ica"} /* 3 */,
+                                       _nrn_mechanism_field<double>{"cai"} /* 4 */,
+                                       _nrn_mechanism_field<double>{"Dcai"} /* 5 */,
                                        _nrn_mechanism_field<double>{"drive_channel"} /* 6 */,
                                        _nrn_mechanism_field<double>{"v"} /* 7 */,
                                        _nrn_mechanism_field<double>{"_g"} /* 8 */,
@@ -506,7 +506,6 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "	(mM) =	 	(millimolar)\n"
   "	(um) = 		(micron)\n"
   "	(mA) = 		(milliamp)\n"
-  "	(msM) = 		(ms mM)\n"
   "}\n"
   "\n"
   "CONSTANT {\n"
@@ -517,18 +516,19 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "	depth = 	0.1	(um)		: depth of shell\n"
   "	taur = 		1.5	(ms)		: remove first-order decay\n"
   "	cainf = 	0.0001	(mM)\n"
+  "	ica 		(mA/cm2)\n"
   "}\n"
   "\n"
   "STATE {\n"
   "	cai		(mM) \n"
   "}\n"
   "\n"
+  "\n"
   "INITIAL {\n"
   "	cai = cainf\n"
   "}\n"
   "\n"
   "ASSIGNED {\n"
-  "	ica		(mA/cm2)\n"
   "	drive_channel	(mM/ms)\n"
   "}\n"
   "	\n"

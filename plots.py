@@ -197,3 +197,6 @@ def plot_cell_with_electrode(cell, Stim):
     ax.view_init(elev=30, azim=45)
     set_equal_aspect(ax)
     plt.show()
+
+
+

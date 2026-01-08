@@ -16,7 +16,6 @@ UNITS {
 	(mM) =	 	(millimolar)
 	(um) = 		(micron)
 	(mA) = 		(milliamp)
-	(msM) = 		(ms mM)
 }
 
 CONSTANT {
@@ -27,18 +26,19 @@ PARAMETER {
 	depth = 	0.1	(um)		: depth of shell
 	taur = 		1.5	(ms)		: remove first-order decay
 	cainf = 	0.0001	(mM)
+	ica 		(mA/cm2)
 }
 
 STATE {
 	cai		(mM) 
 }
 
+
 INITIAL {
 	cai = cainf
 }
 
 ASSIGNED {
-	ica		(mA/cm2)
 	drive_channel	(mM/ms)
 }
 	

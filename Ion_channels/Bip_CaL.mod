@@ -5,7 +5,7 @@ INDEPENDENT {t FROM 0 TO 1 WITH 1 (ms)}
 NEURON {
 	THREADSAFE
     	SUFFIX Bip_CaL
-    	USEION ca READ eca, cao WRITE ica
+    	USEION ca READ eca WRITE ica
     	RANGE gcabar
     	RANGE m_inf, h_inf
     	RANGE m_tau, h_tau
@@ -23,8 +23,6 @@ UNITS {
 PARAMETER {
     	gcabar = 0.4352	(mS/cm2)
     	eca          	(mV)
-    	cao = 1800 	    (uM)
-    	cai = 0.1 		(uM)
     	dt           	(ms)
     	v            	(mV)
 		vshift = -70.0	(mV)

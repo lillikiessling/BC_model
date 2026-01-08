@@ -16,14 +16,17 @@ class ONBipolarCell:
         self.dXterm = 1.0   # µm
         self.rhoA = 130.0   # Ohm*cm
         self.cM = 1.1       # µF/cm2
-        self.glbar = 0.04166  # S/cm2
         self.temp = 35.0     # °C
 
         # reversal potentials
         self.eh = -45.0
         self.ek = -58.0
         self.ena = 57.016
-        self.eL = -41    # mV
+        #self.eL = -41   # mV
+        self.eL = -53.08  # mV
+        self.glbar = 0.04166   / 1000  #mS/cm2 
+        
+
 
         # temperature
         h.celsius = self.temp
@@ -61,7 +64,6 @@ class ONBipolarCell:
             self._rotateX(theta_x)
 
 
-
     # --------------------------------------------------
     def _set_nseg(self):
         """Segment each section according to maximum compartment length rules."""
@@ -96,9 +98,8 @@ class ONBipolarCell:
         sec.insert("Bip_HCN1")
         sec.insert("Bip_HCN2")
         sec.insert("Bip_CaT")
-        #sec.insert("Bip_caconc")
         sec.insert("cad")
-        sec.insert("Bip_KCa")
+        #sec.insert("Bip_KCa")
         sec.insert("Bip_Kir")
         sec.insert("Bip_Kv")
         sec.eh = self.eh
@@ -107,15 +108,12 @@ class ONBipolarCell:
         # --- dendrites ---
         for sec in self.dendritic:
             sec.insert("Bip_Na")
-            #sec.insert("Bip_caconc")
-            sec.insert("cad")
             sec.ena = self.ena
 
         # --- axon ---
         for sec in self.axonal:
             sec.insert("Bip_HCN4")
-            #sec.insert("Bip_caconc")
-            sec.insert("cad")
+            sec.eh = self.eh
 
         # --- terminals ---
         for sec in self.terminal:
@@ -124,10 +122,41 @@ class ONBipolarCell:
             sec.insert("Bip_HCN4")
             sec.insert("Bip_Na")
             sec.insert("Bip_CaL")
-            #sec.insert("Bip_caconc")
             sec.insert("cad")
             sec.eh = self.eh
             sec.ena = self.ena
+        
+        # NOTE: In Havels dissertation he uses the reduced membrane potential (substracting VR / vshift). 
+        # But for our simulations we have to use the absolute membrane potential. So we have to set vshift to 0.
+        for sec in self.all:
+            if "Bip_Na" in sec.psection()['density_mechs']:
+                sec.vshift_Bip_Na = 0
+                sec.gna_bar_Bip_Na = 0.75 / 1000 # mS/cm2
+            if "Bip_Kv" in sec.psection()['density_mechs']:
+                sec.vshift_Bip_Kv = 0
+                sec.gk_bar_Bip_Kv = 2  / 1000 # mS/cm2
+            if "Bip_Kir" in sec.psection()['density_mechs']:
+                sec.vshift_Bip_Kir = 0
+                sec.gkir_bar_Bip_Kir = 0.05   / 1000 # mS/cm2
+            if "Bip_KCa" in sec.psection()['density_mechs']:
+                sec.vshift_Bip_KCa = 0
+                sec.gkcabar_Bip_KCa = 0.036   / 1000 # mS/cm2
+            if "Bip_HCN1" in sec.psection()['density_mechs']:
+                sec.vshift_Bip_HCN1 = 0
+                sec.ghcn1_bar_Bip_HCN1 = 0.08  / 1000  # mS/cm2
+            if "Bip_HCN2" in sec.psection()['density_mechs']:
+                sec.vshift_Bip_HCN2 = 0
+                sec.ghcn2_bar_Bip_HCN2 = 0.08   / 1000 # mS/cm2
+            if "Bip_HCN4" in sec.psection()['density_mechs']:
+                sec.vshift_Bip_HCN4 = 0
+                sec.ghcn4_bar_Bip_HCN4 = 0.08 / 1000  # mS/cm2
+            if "Bip_CaT" in sec.psection()['density_mechs']:
+                sec.vshift_Bip_CaT = 0 
+                sec.gcabar_Bip_CaT = 286   / 1000 # mS/cm2
+            if "Bip_CaL" in sec.psection()['density_mechs']:
+                sec.gcabar_Bip_CaL = 150 / 1000 # mS/cm2
+                #sec.vshift_Bip_CaL = 0 # -70 + 53.08 = -16.92
+
 
     # ----------------------------
     def _set_position(self, Stim):

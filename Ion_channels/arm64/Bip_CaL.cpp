@@ -16,8 +16,8 @@
 #include "nrnconf.h"
 // clang-format on
 #include "neuron/cache/mechanism_range.hpp"
-static constexpr auto number_of_datum_variables = 5;
-static constexpr auto number_of_floating_point_variables = 15;
+static constexpr auto number_of_datum_variables = 3;
+static constexpr auto number_of_floating_point_variables = 14;
 namespace {
 template <typename T>
 using _nrn_mechanism_std_vector = std::vector<T>;
@@ -85,27 +85,21 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #define h_columnindex 7
 #define eca _ml->template fpfield<8>(_iml)
 #define eca_columnindex 8
-#define cao _ml->template fpfield<9>(_iml)
-#define cao_columnindex 9
-#define Dm _ml->template fpfield<10>(_iml)
-#define Dm_columnindex 10
-#define Dh _ml->template fpfield<11>(_iml)
-#define Dh_columnindex 11
-#define ica _ml->template fpfield<12>(_iml)
-#define ica_columnindex 12
-#define v _ml->template fpfield<13>(_iml)
-#define v_columnindex 13
-#define _g _ml->template fpfield<14>(_iml)
-#define _g_columnindex 14
+#define Dm _ml->template fpfield<9>(_iml)
+#define Dm_columnindex 9
+#define Dh _ml->template fpfield<10>(_iml)
+#define Dh_columnindex 10
+#define ica _ml->template fpfield<11>(_iml)
+#define ica_columnindex 11
+#define v _ml->template fpfield<12>(_iml)
+#define v_columnindex 12
+#define _g _ml->template fpfield<13>(_iml)
+#define _g_columnindex 13
 #define _ion_eca *(_ml->dptr_field<0>(_iml))
 #define _p_ion_eca static_cast<neuron::container::data_handle<double>>(_ppvar[0])
-#define _ion_cao *(_ml->dptr_field<1>(_iml))
-#define _p_ion_cao static_cast<neuron::container::data_handle<double>>(_ppvar[1])
-#define _ion_cai *(_ml->dptr_field<2>(_iml))
-#define _p_ion_cai static_cast<neuron::container::data_handle<double>>(_ppvar[2])
-#define _ion_ica *(_ml->dptr_field<3>(_iml))
-#define _p_ion_ica static_cast<neuron::container::data_handle<double>>(_ppvar[3])
-#define _ion_dicadv *(_ml->dptr_field<4>(_iml))
+#define _ion_ica *(_ml->dptr_field<1>(_iml))
+#define _p_ion_ica static_cast<neuron::container::data_handle<double>>(_ppvar[1])
+#define _ion_dicadv *(_ml->dptr_field<2>(_iml))
  /* Thread safe. No static _ml, _iml or _ppvar. */
  static int hoc_nrnpointerindex =  -1;
  static _nrn_mechanism_std_vector<Datum> _extcall_thread;
@@ -147,14 +141,11 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  /* declare global and static user variables */
  #define gind 0
  #define _gth 0
-#define cai cai_Bip_CaL
- double cai = 0.1;
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  {0, 0, 0}
 };
  static HocParmUnits _hoc_parm_units[] = {
- {"cai_Bip_CaL", "uM"},
  {"gcabar_Bip_CaL", "mS/cm2"},
  {"vshift_Bip_CaL", "mV"},
  {0, 0}
@@ -164,7 +155,6 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  static double m0 = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
- {"cai_Bip_CaL", &cai_Bip_CaL},
  {0, 0}
 };
  static DoubVec hoc_vdoub[] = {
@@ -193,7 +183,7 @@ static void _ode_map(Prop*, int, neuron::container::data_handle<double>*, neuron
 static void _ode_spec(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, int);
 static void _ode_matsol(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, int);
  
-#define _cvode_ieq _ppvar[5].literal_value<int>()
+#define _cvode_ieq _ppvar[3].literal_value<int>()
  static void _ode_matsol_instance1(_internalthreadargsproto_);
  /* connect range variables in _p that hoc is supposed to know about */
  static const char *_mechanism[] = {
@@ -224,25 +214,23 @@ extern Prop* need_memb(Symbol*);
 static void nrn_alloc(Prop* _prop) {
   Prop *prop_ion{};
   Datum *_ppvar{};
-   _ppvar = nrn_prop_datum_alloc(_mechtype, 6, _prop);
+   _ppvar = nrn_prop_datum_alloc(_mechtype, 4, _prop);
     _nrn_mechanism_access_dparam(_prop) = _ppvar;
      _nrn_mechanism_cache_instance _ml_real{_prop};
     auto* const _ml = &_ml_real;
     size_t const _iml{};
-    assert(_nrn_mechanism_get_num_vars(_prop) == 15);
+    assert(_nrn_mechanism_get_num_vars(_prop) == 14);
  	/*initialize range parameters*/
  	gcabar = _parm_default[0]; /* 0.4352 */
  	vshift = _parm_default[1]; /* -70 */
- 	 assert(_nrn_mechanism_get_num_vars(_prop) == 15);
+ 	 assert(_nrn_mechanism_get_num_vars(_prop) == 14);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
  prop_ion = need_memb(_ca_sym);
- nrn_promote(prop_ion, 1, 1);
+ nrn_promote(prop_ion, 0, 1);
  	_ppvar[0] = _nrn_mechanism_get_param_handle(prop_ion, 0); /* eca */
- 	_ppvar[1] = _nrn_mechanism_get_param_handle(prop_ion, 2); /* cao */
- 	_ppvar[2] = _nrn_mechanism_get_param_handle(prop_ion, 1); /* cai */
- 	_ppvar[3] = _nrn_mechanism_get_param_handle(prop_ion, 3); /* ica */
- 	_ppvar[4] = _nrn_mechanism_get_param_handle(prop_ion, 4); /* _ion_dicadv */
+ 	_ppvar[1] = _nrn_mechanism_get_param_handle(prop_ion, 3); /* ica */
+ 	_ppvar[2] = _nrn_mechanism_get_param_handle(prop_ion, 4); /* _ion_dicadv */
  
 }
  static void _initlists();
@@ -280,25 +268,20 @@ extern void _cvode_abstol( Symbol**, double*, int);
                                        _nrn_mechanism_field<double>{"m"} /* 6 */,
                                        _nrn_mechanism_field<double>{"h"} /* 7 */,
                                        _nrn_mechanism_field<double>{"eca"} /* 8 */,
-                                       _nrn_mechanism_field<double>{"cao"} /* 9 */,
-                                       _nrn_mechanism_field<double>{"Dm"} /* 10 */,
-                                       _nrn_mechanism_field<double>{"Dh"} /* 11 */,
-                                       _nrn_mechanism_field<double>{"ica"} /* 12 */,
-                                       _nrn_mechanism_field<double>{"v"} /* 13 */,
-                                       _nrn_mechanism_field<double>{"_g"} /* 14 */,
+                                       _nrn_mechanism_field<double>{"Dm"} /* 9 */,
+                                       _nrn_mechanism_field<double>{"Dh"} /* 10 */,
+                                       _nrn_mechanism_field<double>{"ica"} /* 11 */,
+                                       _nrn_mechanism_field<double>{"v"} /* 12 */,
+                                       _nrn_mechanism_field<double>{"_g"} /* 13 */,
                                        _nrn_mechanism_field<double*>{"_ion_eca", "ca_ion"} /* 0 */,
-                                       _nrn_mechanism_field<double*>{"_ion_cao", "ca_ion"} /* 1 */,
-                                       _nrn_mechanism_field<double*>{"_ion_cai", "ca_ion"} /* 2 */,
-                                       _nrn_mechanism_field<double*>{"_ion_ica", "ca_ion"} /* 3 */,
-                                       _nrn_mechanism_field<double*>{"_ion_dicadv", "ca_ion"} /* 4 */,
-                                       _nrn_mechanism_field<int>{"_cvode_ieq", "cvodeieq"} /* 5 */);
-  hoc_register_prop_size(_mechtype, 15, 6);
+                                       _nrn_mechanism_field<double*>{"_ion_ica", "ca_ion"} /* 1 */,
+                                       _nrn_mechanism_field<double*>{"_ion_dicadv", "ca_ion"} /* 2 */,
+                                       _nrn_mechanism_field<int>{"_cvode_ieq", "cvodeieq"} /* 3 */);
+  hoc_register_prop_size(_mechtype, 14, 4);
   hoc_register_dparam_semantics(_mechtype, 0, "ca_ion");
   hoc_register_dparam_semantics(_mechtype, 1, "ca_ion");
   hoc_register_dparam_semantics(_mechtype, 2, "ca_ion");
-  hoc_register_dparam_semantics(_mechtype, 3, "ca_ion");
-  hoc_register_dparam_semantics(_mechtype, 4, "ca_ion");
-  hoc_register_dparam_semantics(_mechtype, 5, "cvodeieq");
+  hoc_register_dparam_semantics(_mechtype, 3, "cvodeieq");
  	hoc_register_cvode(_mechtype, _ode_count, _ode_map, _ode_spec, _ode_matsol);
  	hoc_register_tolerance(_mechtype, _hoc_state_tol, &_atollist);
  
@@ -456,7 +439,6 @@ static void _ode_spec(_nrn_model_sorted_token const& _sorted_token, NrnThread* _
     _nd = _ml_arg->_nodelist[_iml];
     v = NODEV(_nd);
   eca = _ion_eca;
-  cao = _ion_cao;
      _ode_spec1 (_threadargs_);
   }}
  
@@ -491,7 +473,6 @@ static void _ode_matsol(_nrn_model_sorted_token const& _sorted_token, NrnThread*
     _nd = _ml_arg->_nodelist[_iml];
     v = NODEV(_nd);
   eca = _ion_eca;
-  cao = _ion_cao;
  _ode_matsol_instance1(_threadargs_);
  }}
 
@@ -525,7 +506,6 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
    _v = _vec_v[_ni[_iml]];
  v = _v;
   eca = _ion_eca;
-  cao = _ion_cao;
  initmodel(_threadargs_);
  }
 }
@@ -557,7 +537,6 @@ for (_iml = 0; _iml < _cntml; ++_iml) {
  _ppvar = _ml_arg->_pdata[_iml];
    _v = _vec_v[_ni[_iml]];
   eca = _ion_eca;
-  cao = _ion_cao;
  auto const _g_local = _nrn_current(_threadargscomma_ _v + .001);
  	{ double _dica;
   _dica = ica;
@@ -609,7 +588,6 @@ for (size_t _iml = 0; _iml < _cntml; ++_iml) {
  v=_v;
 {
   eca = _ion_eca;
-  cao = _ion_cao;
  {   states(_threadargs_);
   } }}
 
@@ -636,7 +614,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "NEURON {\n"
   "	THREADSAFE\n"
   "    	SUFFIX Bip_CaL\n"
-  "    	USEION ca READ eca, cao WRITE ica\n"
+  "    	USEION ca READ eca WRITE ica\n"
   "    	RANGE gcabar\n"
   "    	RANGE m_inf, h_inf\n"
   "    	RANGE m_tau, h_tau\n"
@@ -654,8 +632,6 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "PARAMETER {\n"
   "    	gcabar = 0.4352	(mS/cm2)\n"
   "    	eca          	(mV)\n"
-  "    	cao = 1800 	    (uM)\n"
-  "    	cai = 0.1 		(uM)\n"
   "    	dt           	(ms)\n"
   "    	v            	(mV)\n"
   "		vshift = -70.0	(mV)\n"

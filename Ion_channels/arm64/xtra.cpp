@@ -20,7 +20,7 @@
 using std::size_t;
 static auto& std_cerr_stream = std::cerr;
 static constexpr auto number_of_datum_variables = 3;
-static constexpr auto number_of_floating_point_variables = 6;
+static constexpr auto number_of_floating_point_variables = 7;
 namespace {
 template <typename T>
 using _nrn_mechanism_std_vector = std::vector<T>;
@@ -69,16 +69,18 @@ void _nrn_mechanism_register_data_fields(Args&&... args) {
 #define dt nrn_threads->_dt
 #define rx _ml->template fpfield<0>(_iml)
 #define rx_columnindex 0
-#define x _ml->template fpfield<1>(_iml)
-#define x_columnindex 1
-#define y _ml->template fpfield<2>(_iml)
-#define y_columnindex 2
-#define z _ml->template fpfield<3>(_iml)
-#define z_columnindex 3
-#define d _ml->template fpfield<4>(_iml)
-#define d_columnindex 4
-#define er _ml->template fpfield<5>(_iml)
-#define er_columnindex 5
+#define rx2 _ml->template fpfield<1>(_iml)
+#define rx2_columnindex 1
+#define RPSim_Ex _ml->template fpfield<2>(_iml)
+#define RPSim_Ex_columnindex 2
+#define x _ml->template fpfield<3>(_iml)
+#define x_columnindex 3
+#define y _ml->template fpfield<4>(_iml)
+#define y_columnindex 4
+#define z _ml->template fpfield<5>(_iml)
+#define z_columnindex 5
+#define er _ml->template fpfield<6>(_iml)
+#define er_columnindex 6
 #define im	*_ppvar[0].get<double*>()
 #define _p_im _ppvar[0].literal_value<void*>()
 #define ex	*_ppvar[1].get<double*>()
@@ -119,19 +121,26 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  /* declare global and static user variables */
  #define gind 0
  #define _gth 0
+#define is2 is2_xtra
+ double is2 = 0;
 #define is is_xtra
  double is = 0;
+#define trigger trigger_xtra
+ double trigger = 0;
  /* some parameters have upper and lower limits */
  static HocParmLimits _hoc_parm_limits[] = {
  {0, 0, 0}
 };
  static HocParmUnits _hoc_parm_units[] = {
+ {"trigger_xtra", "1"},
  {"is_xtra", "milliamp"},
+ {"is2_xtra", "milliamp"},
  {"rx_xtra", "megohm"},
+ {"rx2_xtra", "megohm"},
+ {"RPSim_Ex_xtra", "millivolts"},
  {"x_xtra", "1"},
  {"y_xtra", "1"},
  {"z_xtra", "1"},
- {"d_xtra", "1"},
  {"er_xtra", "microvolts"},
  {"im_xtra", "milliamp/cm2"},
  {"ex_xtra", "millivolts"},
@@ -140,7 +149,9 @@ static NPyDirectMechFunc npy_direct_func_proc[] = {
  static double v = 0;
  /* connect global user variables to hoc */
  static DoubScal hoc_scdoub[] = {
+ {"trigger_xtra", &trigger_xtra},
  {"is_xtra", &is_xtra},
+ {"is2_xtra", &is2_xtra},
  {0, 0}
 };
  static DoubVec hoc_vdoub[] = {
@@ -172,10 +183,11 @@ static void nrn_state(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, in
  "7.7.0",
 "xtra",
  "rx_xtra",
+ "rx2_xtra",
+ "RPSim_Ex_xtra",
  "x_xtra",
  "y_xtra",
  "z_xtra",
- "d_xtra",
  0,
  "er_xtra",
  0,
@@ -188,10 +200,11 @@ static void nrn_state(_nrn_model_sorted_token const&, NrnThread*, Memb_list*, in
  /* Used by NrnProperty */
  static _nrn_mechanism_std_vector<double> _parm_default{
      1, /* rx */
+     1, /* rx2 */
+     0, /* RPSim_Ex */
      0, /* x */
      0, /* y */
      0, /* z */
-     0, /* d */
  }; 
  
  
@@ -204,14 +217,15 @@ static void nrn_alloc(Prop* _prop) {
      _nrn_mechanism_cache_instance _ml_real{_prop};
     auto* const _ml = &_ml_real;
     size_t const _iml{};
-    assert(_nrn_mechanism_get_num_vars(_prop) == 6);
+    assert(_nrn_mechanism_get_num_vars(_prop) == 7);
  	/*initialize range parameters*/
  	rx = _parm_default[0]; /* 1 */
- 	x = _parm_default[1]; /* 0 */
- 	y = _parm_default[2]; /* 0 */
- 	z = _parm_default[3]; /* 0 */
- 	d = _parm_default[4]; /* 0 */
- 	 assert(_nrn_mechanism_get_num_vars(_prop) == 6);
+ 	rx2 = _parm_default[1]; /* 1 */
+ 	RPSim_Ex = _parm_default[2]; /* 0 */
+ 	x = _parm_default[3]; /* 0 */
+ 	y = _parm_default[4]; /* 0 */
+ 	z = _parm_default[5]; /* 0 */
+ 	 assert(_nrn_mechanism_get_num_vars(_prop) == 7);
  	_nrn_mechanism_access_dparam(_prop) = _ppvar;
  	/*connect ionic variables to this model*/
  	_ppvar[2] = _nrn_mechanism_get_area_handle(nrn_alloc_node_);
@@ -224,7 +238,7 @@ void _nrn_thread_table_reg(int, nrn_thread_table_check_t);
 extern void hoc_register_tolerance(int, HocStateTolerance*, Symbol***);
 extern void _cvode_abstol( Symbol**, double*, int);
 
- extern "C" void _xtra_reg() {
+ extern "C" void _Xtra_reg() {
 	int _vectorized = 0;
   _initlists();
  	register_mech(_mechanism, nrn_alloc,nullptr, nullptr, nullptr, nrn_init, hoc_nrnpointerindex, 0);
@@ -237,15 +251,16 @@ extern void _cvode_abstol( Symbol**, double*, int);
 #endif
    _nrn_mechanism_register_data_fields(_mechtype,
                                        _nrn_mechanism_field<double>{"rx"} /* 0 */,
-                                       _nrn_mechanism_field<double>{"x"} /* 1 */,
-                                       _nrn_mechanism_field<double>{"y"} /* 2 */,
-                                       _nrn_mechanism_field<double>{"z"} /* 3 */,
-                                       _nrn_mechanism_field<double>{"d"} /* 4 */,
-                                       _nrn_mechanism_field<double>{"er"} /* 5 */,
+                                       _nrn_mechanism_field<double>{"rx2"} /* 1 */,
+                                       _nrn_mechanism_field<double>{"RPSim_Ex"} /* 2 */,
+                                       _nrn_mechanism_field<double>{"x"} /* 3 */,
+                                       _nrn_mechanism_field<double>{"y"} /* 4 */,
+                                       _nrn_mechanism_field<double>{"z"} /* 5 */,
+                                       _nrn_mechanism_field<double>{"er"} /* 6 */,
                                        _nrn_mechanism_field<double*>{"im", "pointer"} /* 0 */,
                                        _nrn_mechanism_field<double*>{"ex", "pointer"} /* 1 */,
                                        _nrn_mechanism_field<double*>{"area", "area"} /* 2 */);
-  hoc_register_prop_size(_mechtype, 6, 3);
+  hoc_register_prop_size(_mechtype, 7, 3);
   hoc_register_dparam_semantics(_mechtype, 0, "pointer");
   hoc_register_dparam_semantics(_mechtype, 1, "pointer");
   hoc_register_dparam_semantics(_mechtype, 2, "area");
@@ -253,7 +268,7 @@ extern void _cvode_abstol( Symbol**, double*, int);
  	hoc_reg_ba(_mechtype, _ba2, 22);
  
     hoc_register_var(hoc_scdoub, hoc_vdoub, hoc_intfunc);
- 	ivoc_help("help ?1 xtra /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/xtra.mod\n");
+ 	ivoc_help("help ?1 xtra /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/Xtra.mod\n");
  hoc_register_limits(_mechtype, _hoc_parm_limits);
  hoc_register_units(_mechtype, _hoc_parm_units);
  }
@@ -271,7 +286,7 @@ double* _globals = nullptr;
 if (gind != 0 && _thread != nullptr) { _globals = _thread[_gth].get<double*>(); }
  _ppvar = _ppd;
   v = NODEV(_nd);
- ex = is * rx * ( 1e6 ) ;
+ ex = RPSim_Ex * trigger ;
    }
  /* AFTER SOLVE */
  static void _ba2(Node*_nd, Datum* _ppd, Datum* _thread, NrnThread* _nt, Memb_list* _ml_arg, size_t _iml, _nrn_model_sorted_token const& _sorted_token)  {
@@ -287,7 +302,7 @@ static void initmodel() {
   int _i; double _save;_ninits++;
 {
  {
-   ex = is * rx * ( 1e6 ) ;
+   ex = RPSim_Ex * trigger ;
    er = ( 10.0 ) * rx * im * area ;
    }
 
@@ -339,11 +354,14 @@ _first = 0;
 
 #if NMODL_TEXT
 static void register_nmodl_text_and_filename(int mech_type) {
-    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/xtra.mod";
+    const char* nmodl_filename = "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/Xtra.mod";
     const char* nmodl_file_text = 
-  ": $Id: xtra.mod,v 1.4 2014/08/18 23:15:25 ted Exp ted $\n"
+  ": $Id: xtra.mod,v 1.3 2009/02/24 00:52:07 ted Exp ted $\n"
   "\n"
   "COMMENT\n"
+  "\n"
+  "Modified to accomodate 2-electrode extracellular stimulation.\n"
+  "\n"
   "This mechanism is intended to be used in conjunction \n"
   "with the extracellular mechanism.  Pointers specified \n"
   "at the hoc level must be used to connect the \n"
@@ -393,7 +411,10 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "Multiple monopolar or bipolar extracellular recording and \n"
   "stimulation can be accommodated by changing this mod file to \n"
   "include additional rx, er, and is, and changing fieldrec() \n"
-  "to a proc.\n"
+  "to a proc. In particular, to allow for two stimulation \n"
+  "electrodes here, we introduce rx2 and is2. The extracellular\n"
+  "potential `ex', is then the summation of fields generated by\n"
+  "the original rx*is and the newly introduced rx2*is2.\n"
   "\n"
   "3. Allows local storage of xyz coordinates interpolated from \n"
   "the pt3d data.  These coordinates are used by hoc code that \n"
@@ -410,7 +431,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "With NEURON 5.5 and later, this mechanism abandons the BREAKPOINT \n"
   "block and uses the two new blocks BEFORE BREAKPOINT and  \n"
-  "AFTER SOLVE, like this--\n"
+  "AFTER BREAKPOINT, like this--\n"
   "\n"
   "BEFORE BREAKPOINT { : before each cy' = f(y,t) setup\n"
   "  ex = is*rx*(1e6)\n"
@@ -425,25 +446,27 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "\n"
   "NEURON {\n"
   "	SUFFIX xtra\n"
-  "	RANGE rx, er\n"
+  "	RANGE rx, rx2, er, RPSim_Ex\n"
   "	RANGE x, y, z\n"
-  "  RANGE d\n"
-  "	GLOBAL is\n"
+  "	GLOBAL is, is2\n"
   "	POINTER im, ex\n"
   "}\n"
   "\n"
   "PARAMETER {\n"
   "	: default transfer resistance between stim electrodes and axon\n"
-  "	rx = 1 (megohm) : mV/nA\n"
+  "	rx  = 1 (megohm) : mV/nA\n"
+  "	rx2 = 1 (megohm) : mV/nA\n"
+  "	RPSim_Ex = 0	(millivolts)\n"
+  "	trigger = 0 (1)\n"
   "	x = 0 (1) : spatial coords\n"
   "	y = 0 (1)\n"
   "	z = 0 (1)\n"
-  "  d = 0 (1)\n"
   "}\n"
   "\n"
   "ASSIGNED {\n"
   "	v (millivolts)\n"
   "	is (milliamp)\n"
+  "	is2 (milliamp)\n"
   "	ex (millivolts)\n"
   "	im (milliamp/cm2)\n"
   "	er (microvolts)\n"
@@ -451,7 +474,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "}\n"
   "\n"
   "INITIAL {\n"
-  "	ex = is*rx*(1e6)\n"
+  "	ex = RPSim_Ex*trigger :+ is2*rx2*(1e6)\n"
   "	er = (10)*rx*im*area\n"
   ": this demonstrates that area is known\n"
   ": UNITSOFF\n"
@@ -472,10 +495,10 @@ static void register_nmodl_text_and_filename(int mech_type) {
   ": }\n"
   "\n"
   ": With NEURON 5.5 and later, abandon the BREAKPOINT block and PROCEDURE f(),\n"
-  ": and instead use BEFORE BREAKPOINT and AFTER SOLVE\n"
+  ": and instead use BEFORE BREAKPOINT and AFTER BREAKPOINT\n"
   "\n"
   "BEFORE BREAKPOINT { : before each cy' = f(y,t) setup\n"
-  "  ex = is*rx*(1e6)\n"
+  "  ex = RPSim_Ex*trigger :+ is2*rx2*(1e6)\n"
   "}\n"
   "AFTER SOLVE { : after each solution step\n"
   "  er = (10)*rx*im*area\n"

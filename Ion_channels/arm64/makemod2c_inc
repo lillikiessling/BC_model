@@ -118,6 +118,14 @@ Sikora_tsbp.cpp: ../Sikora_tsbp.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
 	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 
+Xtra.cpp: ../Xtra.mod $(NOCMODL)
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Xtra.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
+
+./Xtra.o: Xtra.cpp
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
+	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
+
 capump.cpp: ../capump.mod $(NOCMODL)
 	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
 	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "capump.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
@@ -139,14 +147,6 @@ ribbon_tiger.cpp: ../ribbon_tiger.mod $(NOCMODL)
 	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ribbon_tiger.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
 
 ./ribbon_tiger.o: ribbon_tiger.cpp
-	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
-	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
-
-xtra.cpp: ../xtra.mod $(NOCMODL)
-	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
-	(cd "..";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "xtra.mod"  -o "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64" )
-
-./xtra.o: xtra.cpp
 	@printf " -> $(C_GREEN)Compiling$(C_RESET) /Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<\\n"
 	$(CXXCOMPILE) -I".." $(INCLUDES) -fPIC -c "/Users/lillikiessling/Documents/Stanford/Code/BC_model/Ion_channels/arm64/$<" -o $@
 

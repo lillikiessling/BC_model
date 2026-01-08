@@ -24,3 +24,9 @@ RGC_model_Anna/
 
 
 Ion_channels/arm64/
+Electric_Fields/
+
+SD_curve.ipynb
+SD_curve.py
+test.ipynb
+results/
