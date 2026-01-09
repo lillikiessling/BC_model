@@ -266,7 +266,7 @@ if (RVP_Size[i] == Max_RVP)
 FROM i=0 TO NumSites-1 
   {
 : Determine at which depth [Ca++] is determined
-preCAnow = preCA
+preCAnow = preCA 
 
 : Calculate the instantaneous rate of release for every release site.
 : This rate is an average for a stochastic process.

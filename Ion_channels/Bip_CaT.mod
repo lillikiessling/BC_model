@@ -62,7 +62,7 @@ DERIVATIVE states {
 	hrates(v)
 
 	m' = (m_inf-m)/m_tau
-        h' = (h_inf-h)/h_tau
+    h' = (h_inf-h)/h_tau
 }
 
 PROCEDURE mrates(v) { LOCAL a,b

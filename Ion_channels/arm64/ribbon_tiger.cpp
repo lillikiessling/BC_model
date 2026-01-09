@@ -2329,7 +2329,7 @@ static void register_nmodl_text_and_filename(int mech_type) {
   "FROM i=0 TO NumSites-1 \n"
   "  {\n"
   ": Determine at which depth [Ca++] is determined\n"
-  "preCAnow = preCA\n"
+  "preCAnow = preCA \n"
   "\n"
   ": Calculate the instantaneous rate of release for every release site.\n"
   ": This rate is an average for a stochastic process.\n"

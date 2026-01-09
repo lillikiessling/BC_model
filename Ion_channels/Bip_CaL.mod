@@ -49,6 +49,7 @@ BREAKPOINT {
     ica = (1e-3) * gcabar * m*m*h * (v-(0.32*eca+0.68*-58))
 }
 
+
 DERIVATIVE states {
     mrates(v)
 	hrates(v)
